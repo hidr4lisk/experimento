@@ -1,47 +1,10 @@
-# En la carpeta del proyecto
-python3 -m venv venv
+Esta rama `develop` contiene únicamente el proyecto del congreso.
 
-# Activar el entorno
-source venv/bin/activate  # En Linux/Mac
-# o si usas Windows: venv\Scripts\activate
+Contenido:
+- Carpeta: `congreso-vialidad-2026`
 
-# si hay que clonar el repositorio
+El resto del repositorio (código principal, historial y otras carpetas) permanece en la rama `main`.
 
-# 1. Eliminar el venv antiguo
-rm -rf venv
+Para integrar cambios desde `develop` a `main`, utiliza `git checkout main && git merge --no-ff develop` o las prácticas de flujo de trabajo que uses.
 
-# 2. Crear uno nuevo en la ruta actual
-python3 -m venv venv
-
-# 3. Activar
-source venv/bin/activate
-
-# Actualizar pip
-pip install --upgrade pip
-
-# Instalar Django
-pip install django
-
-# (Opcional pero recomendado) crear requirements.txt
-pip freeze > requirements.txt
-
-# Crear proyecto Django
-django-admin startproject nombre_del_proyecto .
-
-# Crear una app para tu aplicación
-python manage.py startapp nombre_app
-
-4. Configurar la base de datos
-Ejecutar migraciones: python manage.py migrate
-Crear un superusuario (admin): python manage.py createsuperuser
-
-5. Crear usuarios adicionales
-Dos opciones:
-
-Opción A: Desde la terminal con un script
-Opción B: Desde el panel de admin de Django
-
-6. Crear la vista de login
-Crear templates (HTML)
-Configurar URLs
-Usar vistas class-based (LoginView de Django) o function-based
+Backup local de la carpeta original: `git_backup_*` en la raíz del repositorio.
