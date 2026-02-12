@@ -268,9 +268,9 @@
             <span>
                 {% if user.is_superuser %}
                     PANEL DE ADMINISTRADOR
-                {% elif user.username == 'EMMA' %}
+                {% elif user.username|lower == 'emma' %}
                     Bienvenida Emperatriz.
-                {% elif user.username == 'Pipo' %}
+                {% elif user.username|lower == 'pipo' %}
                     Bienvenido Capitán
                 {% else %}
                     Bienvenido, {{ user.username }}
