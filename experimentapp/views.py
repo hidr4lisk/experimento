@@ -194,11 +194,14 @@ def debug_db(request):
         # Si pasan ?migrate=true, forzamos las migraciones
         if request.GET.get('migrate') == 'true':
             call_command('migrate', no_input=True)
-            call_command('init_users') # Si tuviéramos un comando, o ejecutamos el script
-            # Ejecutamos el contenido de init_users.py manualmente si es necesario
+            # El script init_users.py no es un comando de Django, se corre por separado
             import subprocess
-            subprocess.run(["python", "init_users.py"], capture_output=True)
-            return JsonResponse({'status': 'Migrations and users initialized successfully'})
+            res = subprocess.run(["python", "init_users.py"], capture_output=True, text=True)
+            return JsonResponse({
+                'status': 'Migrations and users initialization attempted',
+                'migration_output': 'OK',
+                'user_init_output': res.stdout or res.stderr
+            })
 
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
