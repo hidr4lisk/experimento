@@ -228,6 +228,15 @@ def delete_record(request, record_id):
     record.delete()
     return redirect('home')
 
+@login_required(login_url='login')
+def delete_agent(request, agent_id):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    agent = get_object_or_404(Agent, id=agent_id)
+    agent.delete()
+    return redirect('home')
+
 def debug_db(request):
     """View para diagnosticar problemas de base de datos"""
     # No verificamos autenticación aquí para poder acceder aun cuando el login falla
