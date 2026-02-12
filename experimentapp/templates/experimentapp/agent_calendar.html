@@ -1,253 +1,153 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendario - {{ agent.name }}</title>
+{% extends 'experimentapp/base.html' %}
+
+{% block title %}Calendario - {{ agent.name }}{% endblock %}
+
+{% block extra_css %}
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-        
-        .navbar {
-            background-color: #667eea;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .navbar h1 {
-            font-size: 24px;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px;
-            width: 100%;
-        }
-        
-        .header-info {
+        .calendar-card {
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
         }
-        
-        .header-info h2 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1.5rem;
+
+        .fc {
+            font-family: 'Inter', sans-serif;
         }
-        
-        .header-info p {
-            color: #666;
-            margin: 5px 0;
-            font-size: 0.95rem;
+
+        .fc .fc-toolbar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
         }
-        
-        .calendar-container {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            overflow-x: auto;
+
+        .fc .fc-button-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
         }
-        
+
+        .fc .fc-button-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .fc .fc-day-today {
+            background: rgba(37, 99, 235, 0.05) !important;
+        }
+
         .legend {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            gap: 20px;
             flex-wrap: wrap;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
-        
+
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .legend-color {
-            width: 18px;
-            height: 18px;
-            border-radius: 3px;
-            flex-shrink: 0;
-        }
-        
-        .color-red {
-            background-color: #dc3545;
-        }
-        
-        .color-gray {
-            background-color: #e9ecef;
-        }
-        
-        #calendar {
-            font-family: Arial, sans-serif;
-            min-width: 600px; /* Asegura que el calendario no se colapse demasiado */
-        }
-        
-        .back-btn {
-            background-color: #667eea;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            transition: background-color 0.3s;
-            text-align: center;
-        }
-        
-        .back-btn:hover {
-            background-color: #764ba2;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
         }
 
-        /* Responsive Improvements */
-        @media (max-width: 600px) {
-            .navbar h1 {
-                font-size: 18px;
-            }
-            
-            .header-info h2 {
-                font-size: 1.25rem;
-            }
-            
-            .calendar-container {
-                padding: 10px;
-            }
-            
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
             .fc .fc-toolbar {
                 flex-direction: column;
                 gap: 10px;
             }
-            
-            .fc .fc-toolbar-title {
-                font-size: 1.1rem;
-            }
-            
-            .legend-item {
-                width: calc(50% - 15px);
-            }
-            
-            .back-btn {
-                width: 100%;
-            }
         }
     </style>
-</head>
-<body>
-    <div class="navbar">
-        <h1>Control de Asistencia</h1>
-        <a href="{% url 'home' %}" style="color: white; text-decoration: none;">Volver</a>
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+    <div>
+        <h1 class="page-title">Calendario Individual</h1>
+        <p class="page-subtitle">Visualización de licencias y novedades para <b>{{ agent.name }}</b></p>
     </div>
-    
-    <div class="container">
-        <div class="header-info">
-            <h2>Calendario de {{ agent.name }}</h2>
-            <p><strong>Ubicación:</strong> {{ agent.location }}</p>
-            <p><strong>Registros:</strong> {{ records.count }}</p>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Volver al Panel</a>
+</div>
+
+<div class="glass-card" style="margin-bottom: 25px;">
+    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <div>
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Ubicación Actual</span>
+            <span style="font-weight: 600; color: #0f172a;">{{ agent.location|default:"No especificada" }}</span>
         </div>
-        
-        <div class="calendar-container">
-            <div id="calendar"></div>
+        <div>
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Total de Registros</span>
+            <span style="font-weight: 600; color: #0f172a;">{{ records.count }}</span>
         </div>
-        
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #ffc107;"></div>
-                <span>Vacaciones</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #6f42c1;"></div>
-                <span>Franquicia</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #fd7e14;"></div>
-                <span>Razón Particular</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #dc3545;"></div>
-                <span>Comisión</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color color-gray"></div>
-                <span>Sábados y Domingos</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #e2e8f0; border: 1px solid #cbd5e0;"></div>
-                <span>Feriados</span>
-            </div>
-        </div>
-        
-        <a href="{% url 'home' %}" class="back-btn">Volver</a>
     </div>
-    
+</div>
+
+<div class="calendar-card">
+    <div id="calendar"></div>
+</div>
+
+<div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background: #ffc107;"></div>Vacaciones</div>
+    <div class="legend-item"><div class="legend-color" style="background: #6f42c1;"></div>Franquicia</div>
+    <div class="legend-item"><div class="legend-color" style="background: #fd7e14;"></div>Razón Particular</div>
+    <div class="legend-item"><div class="legend-color" style="background: #dc3545;"></div>Comisión</div>
+    <div class="legend-item"><div class="legend-color" style="background: #e9ecef;"></div>Fines de Semana</div>
+    <div class="legend-item"><div class="legend-color" style="background: #e2e8f0; border: 1px solid #cbd5e0;"></div>Feriados</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
-            
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'es',
+                height: 'auto',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,dayGridWeek'
                 },
-                businessHours: {
-                    daysOfWeek: [1, 2, 3, 4, 5], // lunes a viernes
-                    startTime: '09:00',
-                    endTime: '17:00',
+                buttonText: {
+                    today: 'Hoy',
+                    month: 'Mes',
+                    week: 'Semana'
                 },
                 dayCellDidMount: function(info) {
-                    // Colorear sábados y domingos en gris
                     if (info.date.getDay() === 0 || info.date.getDay() === 6) {
-                        info.el.style.backgroundColor = '#e9ecef';
+                        info.el.style.backgroundColor = '#f8fafc';
                     }
                 },
                 eventSources: [
                     {
                         url: '{% url "agent_calendar_data" agent.id %}',
-                        success: function(data) {
-                            console.log('Eventos cargados:', data);
-                            return data;
-                        },
                         failure: function() {
-                            alert('Error al cargar los eventos');
+                            alert('Error al cargar datos del calendario');
                         }
                     }
                 ],
                 eventDidMount: function(info) {
-                    // Estilos personalizados para los eventos
-                    info.el.style.cursor = 'pointer';
+                    info.el.style.borderRadius = '4px';
+                    info.el.style.padding = '2px 4px';
+                    info.el.style.fontSize = '11px';
+                    info.el.style.fontWeight = '600';
                 }
             });
-            
             calendar.render();
         });
     </script>
-</body>
-</html>
+{% endblock %}

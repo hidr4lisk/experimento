@@ -1,345 +1,131 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Asistencia</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-        
-        .navbar {
-            background-color: #667eea;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .navbar h1 {
-            font-size: 24px;
-        }
-        
-        .navbar-right {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .navbar-right a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        
-        .navbar-right a:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 15px;
-            width: 100%;
-        }
-        
-        .filters {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .filters form {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        .filters select,
-        .filters .btn-reset {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .filters .btn-reset {
-            background-color: #6c757d;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            flex: 0;
-            min-width: 120px;
-        }
-        
-        .actions {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .actions a,
-        .actions button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.3s;
-            flex: 1;
-            text-align: center;
-            min-width: 150px;
-        }
-        
-        .actions a:hover,
-        .actions button:hover {
-            background-color: #218838;
-        }
-        
-        .table-responsive {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px; /* Force scroll on small screens */
-        }
-        
-        th {
-            background-color: #667eea;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        th:hover {
-            background-color: #764ba2;
-        }
-        
-        th a {
-            color: white;
-            text-decoration: none;
-            display: block;
-        }
-        
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .type-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            white-space: nowrap;
-        }
-        
-        .type-asistencia {
-            background-color: #17a2b8;
-        }
-        
-        .type-vacaciones {
-            background-color: #ffc107;
-            color: black;
-        }
-        
-        .type-franquicia {
-            background-color: #6f42c1;
-        }
-        
-        .type-razon_particular {
-            background-color: #fd7e14;
-        }
-        
-        .type-comision {
-            background-color: #dc3545;
-        }
-        
-        .actions-cell {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .btn-sm {
-            padding: 6px 10px;
-            font-size: 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
-            transition: opacity 0.3s;
-        }
-        
-        .btn-edit {
-            background-color: #007bff;
-        }
-        
-        .btn-edit:hover {
-            background-color: #0056b3;
-        }
-        
-        .btn-delete {
-            background-color: #dc3545;
-        }
-        
-        .btn-delete:hover {
-            background-color: #c82333;
-        }
-        
-        .empty-message {
-            padding: 40px;
-            text-align: center;
-            color: #999;
-            font-size: 16px;
-        }
+{% extends 'experimentapp/base.html' %}
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .navbar-right {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .navbar-right a {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .filters select, 
-            .filters .btn-reset {
-                width: 100%;
-                flex: none;
-            }
-            
-            .actions a {
-                width: 100%;
-                flex: none;
-            }
-        }
+{% block title %}Inicio - SIA Control de Asistencia{% endblock %}
 
-        .btn-calendar {
-            font-size: 18px;
-            text-decoration: none;
-            cursor: pointer;
-            display: inline-block;
-            transition: transform 0.2s;
-        }
-        .btn-calendar:hover {
-            transform: scale(1.2);
-        }
+{% block extra_css %}
+    /* Custom styles for home page tabs and filters */
+    .filters {
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 25px;
+    }
 
-        /* Tabs Styles */
-        .tabs-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
+    .filters form {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
 
-        .tab-button {
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            background: none;
-            cursor: pointer;
-            color: #666;
-            transition: all 0.3s;
-            text-decoration: none;
-            border-radius: 5px 5px 0 0;
-        }
+    .filters select, .filters input {
+        padding: 10px 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 14px;
+        background: white;
+    }
 
-        .tab-button:hover {
-            color: #667eea;
-            background-color: rgba(102, 126, 234, 0.05);
-        }
+    .tabs-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0;
+    }
 
-        .tab-button.active {
-            color: white;
-            background-color: #667eea;
-        }
-    </style>
-</head>
-<body>
-    <div class="navbar">
-        <h1>Control de Asistencia</h1>
-        <div class="navbar-right">
-            <span>
-                {% if user.is_superuser %}
-                    PANEL DE ADMINISTRADOR
-                {% elif user.username|lower == 'emma' %}
-                    Bienvenida Emperatriz.
-                {% elif user.username|lower == 'pipo' %}
-                    Bienvenido Capitán
-                {% else %}
-                    Bienvenido, {{ user.username }}
-                {% endif %}
-            </span>
-            <a href="{% url 'logout' %}">Cerrar sesión</a>
-        </div>
-    </div>
-    
-    <div class="container">
-        <div class="tabs-container">
-            <a href="?view=asistencia" class="tab-button {% if current_view == 'asistencia' %}active{% endif %}">ASISTENCIA</a>
-            <a href="?view=agentes" class="tab-button {% if current_view == 'agentes' %}active{% endif %}">AGENTES</a>
-        </div>
+    .tab-button {
+        padding: 14px 40px;
+        font-size: 15px;
+        font-weight: 700;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--text-muted);
+        transition: all 0.3s;
+        text-decoration: none;
+        border-radius: 8px 8px 0 0;
+        margin-bottom: -2px;
+        border-bottom: 2px solid transparent;
+    }
 
-        {% if current_view == 'asistencia' %}
-            <!-- VISTA ASISTENCIA -->
+    .tab-button:hover {
+        color: var(--primary);
+        background: rgba(37, 99, 235, 0.05);
+    }
+
+    .tab-button.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+        background: rgba(37, 99, 235, 0.05);
+    }
+
+    .btn-calendar {
+        font-size: 18px;
+        text-decoration: none;
+        transition: transform 0.2s;
+        display: inline-block;
+    }
+    .btn-calendar:hover {
+        transform: scale(1.2);
+    }
+
+    .type-badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .type-licencia { background: #dcfce7; color: #166534; }
+    .type-comision { background: #dbeafe; color: #1e40af; }
+    .type-franco { background: #fef9c3; color: #854d0e; }
+    .type-falta { background: #fee2e2; color: #991b1b; }
+    .type-otro { background: #f1f5f9; color: #475569; }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+
+    .actions {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: flex-end;
+    }
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Panel Principal</h1>
+    <p class="page-subtitle">Gestión de asistencia y consulta de agentes</p>
+</div>
+
+<div class="tabs-container">
+    <a href="?view=asistencia" class="tab-button {% if current_view == 'asistencia' %}active{% endif %}">ASISTENCIA</a>
+    <a href="?view=agentes" class="tab-button {% if current_view == 'agentes' %}active{% endif %}">AGENTES</a>
+</div>
+
+{% if current_view == 'asistencia' %}
+    <!-- VISTA ASISTENCIA -->
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 20px;">
+            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Registros de Asistencia</h2>
             {% if is_admin %}
-            <div class="actions">
-                <a href="{% url 'add_record' %}">+ Agregar Registro</a>
-            </div>
+            <a href="{% url 'add_record' %}" class="btn btn-primary">
+                <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Registro
+            </a>
             {% endif %}
-            
-            <div class="filters">
-                <form method="GET">
-                    <input type="hidden" name="view" value="asistencia">
+        </div>
+
+        <div class="filters">
+            <form method="GET">
+                <input type="hidden" name="view" value="asistencia">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Agente</label>
                     <select name="agent" onchange="this.form.submit()">
                         <option value="">Todos los agentes</option>
                         {% for agent in agents %}
@@ -348,7 +134,10 @@
                         </option>
                         {% endfor %}
                     </select>
-                    
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Licencia</label>
                     <select name="type" onchange="this.form.submit()">
                         <option value="">Todos los tipos</option>
                         {% for value, label in record_types %}
@@ -357,99 +146,106 @@
                         </option>
                         {% endfor %}
                     </select>
-                    
-                    <input type="text" name="search" placeholder="Buscar por nombre, nota o ubicación..." value="{{ request.GET.search|default:'' }}" style="padding: 10px 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; flex: 2; min-width: 200px;">
-                    
-                    <button type="submit" style="background-color: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; flex: 0; min-width: 100px;">Buscar</button>
-                    
-                    <a href="?view=asistencia" class="btn-reset">Limpiar filtros</a>
-                </form>
-            </div>
-            
-            <div class="table-responsive">
-                {% if records %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 40px; min-width: 40px; text-align: center;"></th>
-                            <th><a href="?view=asistencia&{% if 'agent__name' in request.GET.sort %}sort=-agent__name{% else %}sort=agent__name{% endif %}">Agente</a></th>
-                            <th><a href="?view=asistencia&{% if 'agent__location' in request.GET.sort %}sort=-agent__location{% else %}sort=agent__location{% endif %}">Ubicación</a></th>
-                            <th>Licencia</th>
-                            <th><a href="?view=asistencia&{% if 'fecha_inicio' in request.GET.sort %}sort=-fecha_inicio{% else %}sort=fecha_inicio{% endif %}">Fecha Inicio</a></th>
-                            <th><a href="?view=asistencia&{% if 'fecha_fin' in request.GET.sort %}sort=-fecha_fin{% else %}sort=fecha_fin{% endif %}">Fecha Fin</a></th>
-                            <th>Notas</th>
-                            {% if is_admin %}<th>Acciones</th>{% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for record in records %}
-                        <tr>
-                            <td style="text-align: center;">
-                                <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
-                            </td>
-                            <td><strong>{{ record.agent.name }}</strong></td>
-                            <td>{{ record.agent.location|default:"-" }}</td>
-                            <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
-                            <td>{{ record.fecha_inicio|date:"d/m/Y" }}</td>
-                            <td>{{ record.fecha_fin|date:"d/m/Y" }}</td>
-                            <td>{{ record.notes|truncatewords:10 }}</td>
-                            {% if is_admin %}
-                            <td>
-                                <div class="actions-cell">
-                                    <a href="{% url 'edit_record' record.id %}" class="btn-sm btn-edit">Editar</a>
-                                    <a href="{% url 'delete_record' record.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</a>
-                                </div>
-                            </td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <div class="empty-message">
-                    <p>No hay registros que mostrar.</p>
                 </div>
-                {% endif %}
-            </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 250px;">
+                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Búsqueda por texto</label>
+                    <input type="text" name="search" placeholder="Nombre, nota o ubicación..." value="{{ request.GET.search|default:'' }}">
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">Buscar</button>
+                    <a href="?view=asistencia" class="btn btn-secondary">Limpiar</a>
+                </div>
+            </form>
+        </div>
 
-        {% else %}
-            <!-- VISTA AGENTES -->
-            <div style="margin-top: 20px;">
-                {% if is_admin %}
-                <div class="actions">
-                    <a href="{% url 'add_agent' %}">+ Agregar Agente</a>
-                </div>
-                {% endif %}
-
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Agente</th>
-                                <th>Ubicación</th>
-                                {% if is_admin %}<th>Acciones</th>{% endif %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for agent in agents %}
-                            <tr>
-                                <td><strong>{{ agent.name }}</strong></td>
-                                <td>{{ agent.location|default:"-" }}</td>
-                                {% if is_admin %}
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="{% url 'edit_agent' agent.id %}" class="btn-sm btn-edit">Editar</a>
-                                        <a href="{% url 'delete_agent' agent.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este agente? Se borrarán todos sus registros asociados.')">Eliminar</a>
-                                    </div>
-                                </td>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        <div class="table-responsive">
+            {% if records %}
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60px; text-align: center;">Cal.</th>
+                        <th>Agente</th>
+                        <th>Ubicación</th>
+                        <th>Licencia</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Notas</th>
+                        {% if is_admin %}<th style="text-align: right;">Acciones</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td style="text-align: center;">
+                            <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
+                        </td>
+                        <td><strong>{{ record.agent.name }}</strong></td>
+                        <td><span style="font-size: 13px; color: var(--text-muted);">{{ record.agent.location|default:"-" }}</span></td>
+                        <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
+                        <td style="font-weight: 500;">{{ record.fecha_inicio|date:"d/m/y" }}</td>
+                        <td style="font-weight: 500;">{{ record.fecha_fin|date:"d/m/y" }}</td>
+                        <td style="color: var(--text-muted); font-size: 13px;">{{ record.notes|truncatewords:10 }}</td>
+                        {% if is_admin %}
+                        <td style="text-align: right;">
+                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                <a href="{% url 'edit_record' record.id %}" class="btn btn-secondary btn-sm">Editar</a>
+                                <a href="{% url 'delete_record' record.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                <p style="font-size: 16px;">No se encontraron registros activos.</p>
             </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
-</body>
-</html>
+
+{% else %}
+    <!-- VISTA AGENTES -->
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Personal de la Gerencia</h2>
+            {% if is_admin %}
+            <a href="{% url 'add_agent' %}" class="btn btn-primary">
+                <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre del Agente</th>
+                        <th>Ubicación / Área</th>
+                        {% if is_admin %}<th style="text-align: right;">Acciones</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agent in agents %}
+                    <tr>
+                        <td style="font-weight: 600;">{{ agent.name }}</td>
+                        <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
+                        {% if is_admin %}
+                        <td style="text-align: right;">
+                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                <a href="{% url 'edit_agent' agent.id %}" class="btn btn-secondary btn-sm">Editar</a>
+                                <a href="{% url 'delete_agent' agent.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este agente y todos sus registros?')">Eliminar</a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
