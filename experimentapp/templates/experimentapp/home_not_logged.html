@@ -3,57 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Asistencia</title>
+    <title>SIA - Control de Asistencia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
+            color: white;
+            padding: 20px;
         }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+        /* Subtle background pattern */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zM36 4v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             text-align: center;
-            max-width: 500px;
+            max-width: 550px;
+            width: 100%;
+            color: var(--text-main);
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+        }
+
         h1 {
-            color: #333;
-            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.025em;
+            color: #0f172a;
         }
+
+        h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e2e8f0;
+            width: 100px;
+            margin: 0 auto 24px;
+        }
+
         .message {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 30px;
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
             line-height: 1.6;
         }
+
         .login-btn {
-            background-color: #667eea;
+            background-color: var(--primary);
             color: white;
-            padding: 12px 40px;
+            padding: 14px 44px;
             font-size: 16px;
+            font-weight: 600;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: background-color 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
         }
+
         .login-btn:hover {
-            background-color: #764ba2;
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .footer-info {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #94a3b8;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 24px;
+        }
+
+        .footer-info strong {
+            color: var(--text-muted);
+        }
+
+        .powered-by {
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .powered-by b {
+            color: var(--primary);
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="card">
+        <div class="logo-placeholder">SIA</div>
         <h1>Control de Asistencia</h1>
-        <p class="message">La información es confidencial, identifiquese para continuar</p>
-        <a href="{% url 'login' %}" class="login-btn">Ir a Login</a>
+        <h2>Gerencia Ejecutiva de Planeamiento y Concesiones</h2>
+        
+        <div class="divider"></div>
+        
+        <p class="message">
+            Sistema de Información de Agentes.<br>
+            Acceso restringido a personal autorizado. Identifíquese para continuar.
+        </p>
+        
+        <a href="{% url 'login' %}" class="login-btn">Acceder al Sistema</a>
+
+        <div class="footer-info">
+            <p>Esta Aplicación fue diseñada, producida y gestionada únicamente para control interno de la Gerencia. <strong>Todos los derechos reservados.</strong></p>
+            <div class="powered-by">Powered by <b>Federico Furgiuele</b></div>
+        </div>
     </div>
 </body>
 </html>
