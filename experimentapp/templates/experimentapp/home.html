@@ -351,13 +351,14 @@
             {% endif %}
         </div>
 
-        {% if is_admin %}
         <div style="margin-top: 50px;">
             <h2 style="margin-bottom: 20px; color: #333;">LISTADO DE AGENTES</h2>
             
+            {% if is_admin %}
             <div class="actions">
                 <a href="{% url 'add_agent' %}">+ Agregar Agente</a>
             </div>
+            {% endif %}
 
             <div class="table-responsive">
                 <table>
@@ -365,7 +366,7 @@
                         <tr>
                             <th>Agente</th>
                             <th>Ubicación</th>
-                            <th>Acciones</th>
+                            {% if is_admin %}<th>Acciones</th>{% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -373,19 +374,20 @@
                         <tr>
                             <td><strong>{{ agent.name }}</strong></td>
                             <td>{{ agent.location|default:"-" }}</td>
+                            {% if is_admin %}
                             <td>
                                 <div class="actions-cell">
                                     <a href="{% url 'edit_agent' agent.id %}" class="btn-sm btn-edit">Editar</a>
                                     <a href="{% url 'delete_agent' agent.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este agente? Se borrarán todos sus registros asociados.')">Eliminar</a>
                                 </div>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
-        {% endif %}
     </div>
 </body>
 </html>
