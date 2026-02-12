@@ -96,6 +96,34 @@
         display: flex;
         justify-content: flex-end;
     }
+
+    /* Column Sorting Arrows */
+    .sort-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.2s;
+    }
+
+    .sort-link:hover {
+        color: var(--primary);
+    }
+
+    .sort-arrow {
+        font-size: 10px;
+        color: #94a3b8;
+        display: flex;
+        flex-direction: column;
+        line-height: 0.6;
+        opacity: 0.5;
+    }
+
+    .sort-arrow.active {
+        color: var(--primary);
+        opacity: 1;
+    }
 {% endblock %}
 
 {% block content %}
@@ -166,11 +194,39 @@
                 <thead>
                     <tr>
                         <th style="width: 60px; text-align: center;">Cal.</th>
-                        <th>Agente</th>
-                        <th>Ubicación</th>
+                        <th>
+                            <a href="?view=asistencia&sort={% if request.GET.sort == 'agent__name' %}-agent__name{% else %}agent__name{% endif %}" class="sort-link">
+                                Agente
+                                <span class="sort-arrow {% if 'agent__name' in request.GET.sort %}active{% endif %}">
+                                    {% if request.GET.sort == 'agent__name' %}▲{% elif request.GET.sort == '-agent__name' %}▼{% else %}⇅{% endif %}
+                                </span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?view=asistencia&sort={% if request.GET.sort == 'agent__location' %}-agent__location{% else %}agent__location{% endif %}" class="sort-link">
+                                Ubicación
+                                <span class="sort-arrow {% if 'agent__location' in request.GET.sort %}active{% endif %}">
+                                    {% if request.GET.sort == 'agent__location' %}▲{% elif request.GET.sort == '-agent__location' %}▼{% else %}⇅{% endif %}
+                                </span>
+                            </a>
+                        </th>
                         <th>Licencia</th>
-                        <th>Inicio</th>
-                        <th>Fin</th>
+                        <th>
+                            <a href="?view=asistencia&sort={% if request.GET.sort == 'fecha_inicio' %}-fecha_inicio{% else %}fecha_inicio{% endif %}" class="sort-link">
+                                Inicio
+                                <span class="sort-arrow {% if 'fecha_inicio' in request.GET.sort or not request.GET.sort %}active{% endif %}">
+                                    {% if request.GET.sort == 'fecha_inicio' %}▲{% elif request.GET.sort == '-fecha_inicio' or not request.GET.sort %}▼{% else %}⇅{% endif %}
+                                </span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?view=asistencia&sort={% if request.GET.sort == 'fecha_fin' %}-fecha_fin{% else %}fecha_fin{% endif %}" class="sort-link">
+                                Fin
+                                <span class="sort-arrow {% if 'fecha_fin' in request.GET.sort %}active{% endif %}">
+                                    {% if request.GET.sort == 'fecha_fin' %}▲{% elif request.GET.sort == '-fecha_fin' %}▼{% else %}⇅{% endif %}
+                                </span>
+                            </a>
+                        </th>
                         <th>Notas</th>
                         {% if is_admin %}<th style="text-align: right;">Acciones</th>{% endif %}
                     </tr>
@@ -223,8 +279,22 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Nombre del Agente</th>
-                        <th>Ubicación / Área</th>
+                        <th>
+                            <a href="?view=agentes&sort={% if request.GET.sort == 'name' %}-name{% else %}name{% endif %}" class="sort-link">
+                                Nombre del Agente
+                                <span class="sort-arrow {% if 'name' in request.GET.sort or not request.GET.sort and current_view == 'agentes' %}active{% endif %}">
+                                    {% if request.GET.sort == 'name' or not request.GET.sort and current_view == 'agentes' %}▲{% elif request.GET.sort == '-name' %}▼{% else %}⇅{% endif %}
+                                </span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?view=agentes&sort={% if request.GET.sort == 'location' %}-location{% else %}location{% endif %}" class="sort-link">
+                                Ubicación / Área
+                                <span class="sort-arrow {% if 'location' in request.GET.sort %}active{% endif %}">
+                                    {% if request.GET.sort == 'location' %}▲{% elif request.GET.sort == '-location' %}▼{% else %}⇅{% endif %}
+                                </span>
+                            </a>
+                        </th>
                         {% if is_admin %}<th style="text-align: right;">Acciones</th>{% endif %}
                     </tr>
                 </thead>

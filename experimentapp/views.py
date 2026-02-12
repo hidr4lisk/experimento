@@ -36,10 +36,13 @@ def home(request):
         )
     
     # Ordenamiento
-    sort_by = request.GET.get('sort', '-fecha_inicio')
-    records = records.order_by(sort_by)
+    sort_by = request.GET.get('sort', 'name' if current_view == 'agentes' else '-fecha_inicio')
     
     agents = Agent.objects.all()
+    if current_view == 'agentes':
+        agents = agents.order_by(sort_by)
+    else:
+        records = records.order_by(sort_by)
     is_admin = request.user.is_superuser
     
     context = {
