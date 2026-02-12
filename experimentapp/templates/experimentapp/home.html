@@ -259,6 +259,17 @@
                 flex: none;
             }
         }
+
+        .btn-calendar {
+            font-size: 18px;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .btn-calendar:hover {
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body>
@@ -320,8 +331,10 @@
             <table>
                 <thead>
                     <tr>
+                        <th style="width: 40px; min-width: 40px; text-align: center;"></th>
                         <th><a href="?{% if 'agent__name' in request.GET.sort %}sort=-agent__name{% else %}sort=agent__name{% endif %}">Agente</a></th>
-                        <th>Tipo</th>
+                        <th><a href="?{% if 'agent__location' in request.GET.sort %}sort=-agent__location{% else %}sort=agent__location{% endif %}">Ubicación</a></th>
+                        <th>Licencia</th>
                         <th><a href="?{% if 'fecha_inicio' in request.GET.sort %}sort=-fecha_inicio{% else %}sort=fecha_inicio{% endif %}">Fecha Inicio</a></th>
                         <th><a href="?{% if 'fecha_fin' in request.GET.sort %}sort=-fecha_fin{% else %}sort=fecha_fin{% endif %}">Fecha Fin</a></th>
                         <th>Notas</th>
@@ -331,7 +344,11 @@
                 <tbody>
                     {% for record in records %}
                     <tr>
-                        <td><a href="{% url 'agent_calendar' record.agent.id %}" style="color: #667eea; text-decoration: none; cursor: pointer; font-weight: bold;">{{ record.agent.name }}</a></td>
+                        <td style="text-align: center;">
+                            <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
+                        </td>
+                        <td><strong>{{ record.agent.name }}</strong></td>
+                        <td>{{ record.agent.location|default:"-" }}</td>
                         <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
                         <td>{{ record.fecha_inicio|date:"d/m/Y" }}</td>
                         <td>{{ record.fecha_fin|date:"d/m/Y" }}</td>

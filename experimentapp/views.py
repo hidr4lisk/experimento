@@ -28,6 +28,7 @@ def home(request):
         from django.db.models import Q
         records = records.filter(
             Q(agent__name__icontains=search_query) | 
+            Q(agent__location__icontains=search_query) | 
             Q(notes__icontains=search_query)
         )
     
