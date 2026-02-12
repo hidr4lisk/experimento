@@ -105,10 +105,13 @@ SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "False") == "True"
 SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "False") == "True"
 CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE", "False") == "True"
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
 
 # CSRF settings - List all trusted origins explicitly
 CSRF_TRUSTED_ORIGINS = [
     "https://experimento-ikiy.onrender.com",
+    "https://*.onrender.com",
     "https://localhost:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
