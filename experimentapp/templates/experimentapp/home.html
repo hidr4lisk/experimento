@@ -52,7 +52,8 @@
         .container {
             max-width: 1200px;
             margin: 20px auto;
-            padding: 0 20px;
+            padding: 0 15px;
+            width: 100%;
         }
         
         .filters {
@@ -61,6 +62,9 @@
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filters form {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
@@ -68,37 +72,29 @@
         }
         
         .filters select,
-        .filters button {
-            padding: 8px 12px;
+        .filters .btn-reset {
+            padding: 10px 12px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
+            flex: 1;
+            min-width: 200px;
         }
         
-        .filters button {
-            background-color: #667eea;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .filters button:hover {
-            background-color: #764ba2;
-        }
-        
-        .filters button.reset {
+        .filters .btn-reset {
             background-color: #6c757d;
-        }
-        
-        .filters button.reset:hover {
-            background-color: #5a6268;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            flex: 0;
+            min-width: 120px;
         }
         
         .actions {
             margin-bottom: 20px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
         .actions a,
@@ -112,6 +108,9 @@
             text-decoration: none;
             font-size: 14px;
             transition: background-color 0.3s;
+            flex: 1;
+            text-align: center;
+            min-width: 150px;
         }
         
         .actions a:hover,
@@ -123,12 +122,13 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            overflow-x: auto;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 800px; /* Force scroll on small screens */
         }
         
         th {
@@ -148,6 +148,7 @@
         th a {
             color: white;
             text-decoration: none;
+            display: block;
         }
         
         td {
@@ -166,6 +167,7 @@
             font-size: 12px;
             font-weight: bold;
             color: white;
+            white-space: nowrap;
         }
         
         .type-asistencia {
@@ -219,6 +221,36 @@
             color: #999;
             font-size: 16px;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .navbar-right {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .navbar-right a {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .filters select, 
+            .filters .btn-reset {
+                width: 100%;
+                flex: none;
+            }
+            
+            .actions a {
+                width: 100%;
+                flex: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -239,7 +271,7 @@
         {% endif %}
         
         <div class="filters">
-            <form method="GET" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; width: 100%;">
+            <form method="GET">
                 <select name="agent" onchange="this.form.submit()">
                     <option value="">Todos los agentes</option>
                     {% for agent in agents %}
@@ -258,7 +290,7 @@
                     {% endfor %}
                 </select>
                 
-                <a href="{% url 'home' %}" style="background-color: #6c757d; color: white; padding: 8px 12px; border-radius: 5px; text-decoration: none;">Limpiar filtros</a>
+                <a href="{% url 'home' %}" class="btn-reset">Limpiar filtros</a>
             </form>
         </div>
         

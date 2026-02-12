@@ -6,6 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Agent, Record
 from datetime import datetime, timedelta
+import holidays
 
 def home(request):
     if not request.user.is_authenticated:
@@ -64,6 +65,41 @@ def agent_calendar_data(request, agent_id):
     
     events = []
     
+    # Obtener el rango de fechas para los feriados
+    all_dates = [r.fecha_inicio for r in records] + [r.fecha_fin for r in records]
+    if all_dates:
+        min_year = min(d.year for d in all_dates)
+        max_year = max(d.year for d in all_dates)
+    else:
+        min_year = datetime.now().year
+        max_year = datetime.now().year
+    
+    # Cargar feriados de Argentina para los años relevantes
+    ar_holidays = holidays.AR(years=range(min_year, max_year + 1))
+    
+    # Agregar feriados al calendario
+    for date, name in ar_holidays.items():
+        if date.weekday() < 5:  # Solo feriados en días hábiles (opcional, pero consistente con el resto)
+            events.append({
+                'title': f'Feriado: {name}',
+                'start': date.strftime('%Y-%m-%d'),
+                'backgroundColor': '#e2e8f0',
+                'borderColor': '#cbd5e0',
+                'textColor': '#4a5568',
+                'allDay': True,
+                'display': 'background', # Opcional: mostrar como fondo
+            })
+        else:
+            # Si es fin de semana, igual lo agregamos pero quizás con otro estilo o solo el título
+            events.append({
+                'title': f'Feriado: {name}',
+                'start': date.strftime('%Y-%m-%d'),
+                'backgroundColor': '#e2e8f0',
+                'borderColor': '#cbd5e0',
+                'textColor': '#4a5568',
+                'allDay': True,
+            })
+
     # Agregar eventos de los registros (días que no vino)
     for record in records:
         current_date = record.fecha_inicio
@@ -74,10 +110,11 @@ def agent_calendar_data(request, agent_id):
             if current_date.weekday() < 5:  # 0=lunes, 4=viernes
                 events.append({
                     'title': f'{record.get_record_type_display()}',
-                    'date': current_date.strftime('%Y-%m-%d'),
+                    'start': current_date.strftime('%Y-%m-%d'),
                     'backgroundColor': color,
                     'borderColor': color,
                     'textColor': 'white',
+                    'allDay': True,
                 })
             current_date += timedelta(days=1)
     

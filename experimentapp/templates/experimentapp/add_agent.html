@@ -28,12 +28,14 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
         
         h1 {
             color: #333;
             margin-bottom: 20px;
             text-align: center;
+            font-size: 1.5rem;
         }
         
         .form-group {
@@ -50,10 +52,10 @@
         input[type="text"],
         input[type="email"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 16px; /* Avoid zoom on iOS */
             box-sizing: border-box;
         }
         
@@ -72,7 +74,7 @@
         button,
         a {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: none;
             border-radius: 5px;
             font-size: 14px;
@@ -99,6 +101,27 @@
         
         a:hover {
             background-color: #5a6268;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .navbar {
+                padding: 10px;
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .container {
+                padding: 20px;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            button, a {
+                width: 100%;
+            }
         }
     </style>
 </head>
