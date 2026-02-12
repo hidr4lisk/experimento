@@ -9,7 +9,10 @@ pip install -r requirements.txt
 python manage.py collectstatic --no-input
 
 # Apply migrations
-python manage.py migrate
+echo "==> Running migrations..."
+python manage.py makemigrations --no-input
+python manage.py migrate --no-input
 
 # Initialize default users
+echo "==> Initializing users..."
 python init_users.py
