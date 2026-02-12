@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .navbar {
+            background-color: #667eea;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+        }
+        
+        .navbar-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .navbar-right a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar-right a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filters select,
+        .filters button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .filters button {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .filters button:hover {
+            background-color: #764ba2;
+        }
+        
+        .filters button.reset {
+            background-color: #6c757d;
+        }
+        
+        .filters button.reset:hover {
+            background-color: #5a6268;
+        }
+        
+        .actions {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .actions a,
+        .actions button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .actions a:hover,
+        .actions button:hover {
+            background-color: #218838;
+        }
+        
+        .table-responsive {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        th:hover {
+            background-color: #764ba2;
+        }
+        
+        th a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .type-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .type-asistencia {
+            background-color: #17a2b8;
+        }
+        
+        .type-vacaciones {
+            background-color: #ffc107;
+            color: black;
+        }
+        
+        .type-franquicia {
+            background-color: #6f42c1;
+        }
+        
+        .type-razon_particular {
+            background-color: #fd7e14;
+        }
+        
+        .type-comision {
+            background-color: #dc3545;
+        }
+        
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            transition: opacity 0.3s;
+        }
+        
+        .btn-edit {
+            background-color: #007bff;
+        }
+        
+        .btn-edit:hover {
+            background-color: #0056b3;
+        }
+        
+        .empty-message {
+            padding: 40px;
+            text-align: center;
+            color: #999;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Control de Asistencia</h1>
+        <div class="navbar-right">
+            <span>Bienvenido, {{ user.username }}</span>
+            <a href="{% url 'logout' %}">Cerrar sesión</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if is_admin %}
+        <div class="actions">
+            <a href="{% url 'add_agent' %}">+ Agregar Agente</a>
+            <a href="{% url 'add_record' %}">+ Agregar Registro</a>
+        </div>
+        {% endif %}
+        
+        <div class="filters">
+            <form method="GET" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; width: 100%;">
+                <select name="agent" onchange="this.form.submit()">
+                    <option value="">Todos los agentes</option>
+                    {% for agent in agents %}
+                    <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>
+                        {{ agent.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <select name="type" onchange="this.form.submit()">
+                    <option value="">Todos los tipos</option>
+                    {% for value, label in record_types %}
+                    <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <a href="{% url 'home' %}" style="background-color: #6c757d; color: white; padding: 8px 12px; border-radius: 5px; text-decoration: none;">Limpiar filtros</a>
+            </form>
+        </div>
+        
+        <div class="table-responsive">
+            {% if records %}
+            <table>
+                <thead>
+                    <tr>
+                        <th><a href="?{% if 'agent__name' in request.GET.sort %}sort=-agent__name{% else %}sort=agent__name{% endif %}">Agente</a></th>
+                        <th>Tipo</th>
+                        <th><a href="?{% if 'fecha_inicio' in request.GET.sort %}sort=-fecha_inicio{% else %}sort=fecha_inicio{% endif %}">Fecha Inicio</a></th>
+                        <th><a href="?{% if 'fecha_fin' in request.GET.sort %}sort=-fecha_fin{% else %}sort=fecha_fin{% endif %}">Fecha Fin</a></th>
+                        <th>Notas</th>
+                        {% if is_admin %}<th>Acciones</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td><a href="{% url 'agent_calendar' record.agent.id %}" style="color: #667eea; text-decoration: none; cursor: pointer; font-weight: bold;">{{ record.agent.name }}</a></td>
+                        <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
+                        <td>{{ record.fecha_inicio|date:"d/m/Y" }}</td>
+                        <td>{{ record.fecha_fin|date:"d/m/Y" }}</td>
+                        <td>{{ record.notes|truncatewords:10 }}</td>
+                        {% if is_admin %}
+                        <td>
+                            <div class="actions-cell">
+                                <a href="{% url 'edit_record' record.id %}" class="btn-sm btn-edit">Editar</a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-message">
+                <p>No hay registros que mostrar.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

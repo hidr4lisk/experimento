@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario - {{ agent.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .navbar {
+            background-color: #667eea;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .header-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-info h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header-info p {
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .calendar-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        
+        .color-red {
+            background-color: #dc3545;
+        }
+        
+        .color-gray {
+            background-color: #e9ecef;
+        }
+        
+        #calendar {
+            font-family: Arial, sans-serif;
+        }
+        
+        .back-btn {
+            background-color: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Control de Asistencia</h1>
+        <a href="{% url 'home' %}" style="color: white; text-decoration: none;">Volver</a>
+    </div>
+    
+    <div class="container">
+        <div class="header-info">
+            <h2>Calendario de {{ agent.name }}</h2>
+            <p><strong>Ubicación:</strong> {{ agent.location }}</p>
+            <p><strong>Registros:</strong> {{ records.count }}</p>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ffc107;"></div>
+                <span>Vacaciones</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #6f42c1;"></div>
+                <span>Franquicia</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #fd7e14;"></div>
+                <span>Razón Particular</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #dc3545;"></div>
+                <span>Comisión</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-gray"></div>
+                <span>Sábados y Domingos</span>
+            </div>
+        </div>
+        
+        <div class="calendar-container">
+            <div id="calendar"></div>
+        </div>
+        
+        <a href="{% url 'home' %}" class="back-btn">Volver</a>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek'
+                },
+                businessHours: {
+                    daysOfWeek: [1, 2, 3, 4, 5], // lunes a viernes
+                    startTime: '09:00',
+                    endTime: '17:00',
+                },
+                dayCellDidMount: function(info) {
+                    // Colorear sábados y domingos en gris
+                    if (info.date.getDay() === 0 || info.date.getDay() === 6) {
+                        info.el.style.backgroundColor = '#e9ecef';
+                    }
+                },
+                eventSources: [
+                    {
+                        url: '{% url "agent_calendar_data" agent.id %}',
+                        success: function(data) {
+                            console.log('Eventos cargados:', data);
+                            return data;
+                        },
+                        failure: function() {
+                            alert('Error al cargar los eventos');
+                        }
+                    }
+                ],
+                eventDidMount: function(info) {
+                    // Estilos personalizados para los eventos
+                    info.el.style.cursor = 'pointer';
+                }
+            });
+            
+            calendar.render();
+        });
+    </script>
+</body>
+</html>
