@@ -18,11 +18,18 @@ def home(request):
     # Filtros
     agent_filter = request.GET.get('agent')
     record_type_filter = request.GET.get('type')
+    search_query = request.GET.get('search')
     
     if agent_filter:
         records = records.filter(agent_id=agent_filter)
     if record_type_filter:
         records = records.filter(record_type=record_type_filter)
+    if search_query:
+        from django.db.models import Q
+        records = records.filter(
+            Q(agent__name__icontains=search_query) | 
+            Q(notes__icontains=search_query)
+        )
     
     # Ordenamiento
     sort_by = request.GET.get('sort', '-fecha_inicio')
