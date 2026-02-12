@@ -10,3 +10,6 @@ python manage.py collectstatic --no-input
 
 # Apply migrations
 python manage.py migrate
+
+# Initialize default users
+python init_users.py

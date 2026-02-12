@@ -181,3 +181,33 @@ def edit_record(request, record_id):
         'record_types': Record.RECORD_TYPES
     }
     return render(request, 'experimentapp/edit_record.html', context)  
+
+def debug_db(request):
+    """View para diagnosticar problemas de base de datos"""
+    # No verificamos autenticación aquí para poder acceder aun cuando el login falla
+    # Pero usamos un secreto o algo simple si es necesario, por ahora acceso libre
+    # para debug rápido (solo habilitar temporalmente)
+    try:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            row = cursor.fetchone()
+        
+        from django.contrib.auth.models import User
+        from .models import Agent, Record
+        
+        db_info = {
+            'connection': 'OK' if row else 'Failed',
+            'engine': connection.settings_dict['ENGINE'],
+            'host': connection.settings_dict['HOST'],
+            'user_count': User.objects.count(),
+            'agent_count': Agent.objects.count(),
+            'record_count': Record.objects.count(),
+        }
+        return JsonResponse(db_info)
+    except Exception as e:
+        import traceback
+        return JsonResponse({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }, status=500)

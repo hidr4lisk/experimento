@@ -11,4 +11,5 @@ urlpatterns = [
     path('edit-record/<int:record_id>/', views.edit_record, name='edit_record'),
     path('agent/<int:agent_id>/calendar/', views.agent_calendar, name='agent_calendar'),
     path('agent/<int:agent_id>/calendar-data/', views.agent_calendar_data, name='agent_calendar_data'),
+    path('debug-db/', views.debug_db, name='debug_db'),
 ]
