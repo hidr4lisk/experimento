@@ -15,6 +15,9 @@ def home(request):
     
     records = Record.objects.all().order_by('-fecha_inicio')
     
+    # Vista actual (asistencia o agentes)
+    current_view = request.GET.get('view', 'asistencia')
+    
     # Filtros
     agent_filter = request.GET.get('agent')
     record_type_filter = request.GET.get('type')
@@ -44,6 +47,7 @@ def home(request):
         'agents': agents,
         'is_admin': is_admin,
         'record_types': Record.RECORD_TYPES,
+        'current_view': current_view,
     }
     return render(request, 'experimentapp/home.html', context)
 

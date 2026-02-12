@@ -270,6 +270,38 @@
         .btn-calendar:hover {
             transform: scale(1.2);
         }
+
+        /* Tabs Styles */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .tab-button {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab-button:hover {
+            color: #667eea;
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        .tab-button.active {
+            color: white;
+            background-color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -292,114 +324,80 @@
     </div>
     
     <div class="container">
-        {% if is_admin %}
-        <div class="actions">
-            <a href="{% url 'add_record' %}">+ Agregar Registro</a>
-        </div>
-        {% endif %}
-        
-        <div class="filters">
-            <form method="GET">
-                <select name="agent" onchange="this.form.submit()">
-                    <option value="">Todos los agentes</option>
-                    {% for agent in agents %}
-                    <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>
-                        {{ agent.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-                
-                <select name="type" onchange="this.form.submit()">
-                    <option value="">Todos los tipos</option>
-                    {% for value, label in record_types %}
-                    <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
-                        {{ label }}
-                    </option>
-                    {% endfor %}
-                </select>
-                
-                <input type="text" name="search" placeholder="Buscar por nombre o nota..." value="{{ request.GET.search|default:'' }}" style="padding: 10px 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; flex: 2; min-width: 200px;">
-                
-                <button type="submit" style="background-color: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; flex: 0; min-width: 100px;">Buscar</button>
-                
-                <a href="{% url 'home' %}" class="btn-reset">Limpiar filtros</a>
-            </form>
-        </div>
-        
-        <div class="table-responsive">
-            {% if records %}
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 40px; min-width: 40px; text-align: center;"></th>
-                        <th><a href="?{% if 'agent__name' in request.GET.sort %}sort=-agent__name{% else %}sort=agent__name{% endif %}">Agente</a></th>
-                        <th><a href="?{% if 'agent__location' in request.GET.sort %}sort=-agent__location{% else %}sort=agent__location{% endif %}">Ubicación</a></th>
-                        <th>Licencia</th>
-                        <th><a href="?{% if 'fecha_inicio' in request.GET.sort %}sort=-fecha_inicio{% else %}sort=fecha_inicio{% endif %}">Fecha Inicio</a></th>
-                        <th><a href="?{% if 'fecha_fin' in request.GET.sort %}sort=-fecha_fin{% else %}sort=fecha_fin{% endif %}">Fecha Fin</a></th>
-                        <th>Notas</th>
-                        {% if is_admin %}<th>Acciones</th>{% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for record in records %}
-                    <tr>
-                        <td style="text-align: center;">
-                            <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
-                        </td>
-                        <td><strong>{{ record.agent.name }}</strong></td>
-                        <td>{{ record.agent.location|default:"-" }}</td>
-                        <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
-                        <td>{{ record.fecha_inicio|date:"d/m/Y" }}</td>
-                        <td>{{ record.fecha_fin|date:"d/m/Y" }}</td>
-                        <td>{{ record.notes|truncatewords:10 }}</td>
-                        {% if is_admin %}
-                        <td>
-                            <div class="actions-cell">
-                                <a href="{% url 'edit_record' record.id %}" class="btn-sm btn-edit">Editar</a>
-                                <a href="{% url 'delete_record' record.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</a>
-                            </div>
-                        </td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <div class="empty-message">
-                <p>No hay registros que mostrar.</p>
-            </div>
-            {% endif %}
+        <div class="tabs-container">
+            <a href="?view=asistencia" class="tab-button {% if current_view == 'asistencia' %}active{% endif %}">ASISTENCIA</a>
+            <a href="?view=agentes" class="tab-button {% if current_view == 'agentes' %}active{% endif %}">AGENTES</a>
         </div>
 
-        <div style="margin-top: 50px;">
-            <h2 style="margin-bottom: 20px; color: #333;">LISTADO DE AGENTES</h2>
-            
+        {% if current_view == 'asistencia' %}
+            <!-- VISTA ASISTENCIA -->
             {% if is_admin %}
             <div class="actions">
-                <a href="{% url 'add_agent' %}">+ Agregar Agente</a>
+                <a href="{% url 'add_record' %}">+ Agregar Registro</a>
             </div>
             {% endif %}
-
+            
+            <div class="filters">
+                <form method="GET">
+                    <input type="hidden" name="view" value="asistencia">
+                    <select name="agent" onchange="this.form.submit()">
+                        <option value="">Todos los agentes</option>
+                        {% for agent in agents %}
+                        <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>
+                            {{ agent.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <select name="type" onchange="this.form.submit()">
+                        <option value="">Todos los tipos</option>
+                        {% for value, label in record_types %}
+                        <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <input type="text" name="search" placeholder="Buscar por nombre, nota o ubicación..." value="{{ request.GET.search|default:'' }}" style="padding: 10px 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; flex: 2; min-width: 200px;">
+                    
+                    <button type="submit" style="background-color: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; flex: 0; min-width: 100px;">Buscar</button>
+                    
+                    <a href="?view=asistencia" class="btn-reset">Limpiar filtros</a>
+                </form>
+            </div>
+            
             <div class="table-responsive">
+                {% if records %}
                 <table>
                     <thead>
                         <tr>
-                            <th>Agente</th>
-                            <th>Ubicación</th>
+                            <th style="width: 40px; min-width: 40px; text-align: center;"></th>
+                            <th><a href="?view=asistencia&{% if 'agent__name' in request.GET.sort %}sort=-agent__name{% else %}sort=agent__name{% endif %}">Agente</a></th>
+                            <th><a href="?view=asistencia&{% if 'agent__location' in request.GET.sort %}sort=-agent__location{% else %}sort=agent__location{% endif %}">Ubicación</a></th>
+                            <th>Licencia</th>
+                            <th><a href="?view=asistencia&{% if 'fecha_inicio' in request.GET.sort %}sort=-fecha_inicio{% else %}sort=fecha_inicio{% endif %}">Fecha Inicio</a></th>
+                            <th><a href="?view=asistencia&{% if 'fecha_fin' in request.GET.sort %}sort=-fecha_fin{% else %}sort=fecha_fin{% endif %}">Fecha Fin</a></th>
+                            <th>Notas</th>
                             {% if is_admin %}<th>Acciones</th>{% endif %}
                         </tr>
                     </thead>
                     <tbody>
-                        {% for agent in agents %}
+                        {% for record in records %}
                         <tr>
-                            <td><strong>{{ agent.name }}</strong></td>
-                            <td>{{ agent.location|default:"-" }}</td>
+                            <td style="text-align: center;">
+                                <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
+                            </td>
+                            <td><strong>{{ record.agent.name }}</strong></td>
+                            <td>{{ record.agent.location|default:"-" }}</td>
+                            <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
+                            <td>{{ record.fecha_inicio|date:"d/m/Y" }}</td>
+                            <td>{{ record.fecha_fin|date:"d/m/Y" }}</td>
+                            <td>{{ record.notes|truncatewords:10 }}</td>
                             {% if is_admin %}
                             <td>
                                 <div class="actions-cell">
-                                    <a href="{% url 'edit_agent' agent.id %}" class="btn-sm btn-edit">Editar</a>
-                                    <a href="{% url 'delete_agent' agent.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este agente? Se borrarán todos sus registros asociados.')">Eliminar</a>
+                                    <a href="{% url 'edit_record' record.id %}" class="btn-sm btn-edit">Editar</a>
+                                    <a href="{% url 'delete_record' record.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</a>
                                 </div>
                             </td>
                             {% endif %}
@@ -407,8 +405,51 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                {% else %}
+                <div class="empty-message">
+                    <p>No hay registros que mostrar.</p>
+                </div>
+                {% endif %}
             </div>
-        </div>
+
+        {% else %}
+            <!-- VISTA AGENTES -->
+            <div style="margin-top: 20px;">
+                {% if is_admin %}
+                <div class="actions">
+                    <a href="{% url 'add_agent' %}">+ Agregar Agente</a>
+                </div>
+                {% endif %}
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agente</th>
+                                <th>Ubicación</th>
+                                {% if is_admin %}<th>Acciones</th>{% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for agent in agents %}
+                            <tr>
+                                <td><strong>{{ agent.name }}</strong></td>
+                                <td>{{ agent.location|default:"-" }}</td>
+                                {% if is_admin %}
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="{% url 'edit_agent' agent.id %}" class="btn-sm btn-edit">Editar</a>
+                                        <a href="{% url 'delete_agent' agent.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este agente? Se borrarán todos sus registros asociados.')">Eliminar</a>
+                                    </div>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
