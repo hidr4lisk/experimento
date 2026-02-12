@@ -111,7 +111,7 @@ USE_X_FORWARDED_PORT = True
 # CSRF settings - List all trusted origins explicitly
 CSRF_TRUSTED_ORIGINS = [
     "https://experimento-ikiy.onrender.com",
-    "https://*onrender.com",
+    "https://*.onrender.com",
 ]
 # Ensure CSRF cookie is sent over HTTPS only
 CSRF_COOKIE_HTTPONLY = False  # Set to False to allow JS access if needed, but True is safer

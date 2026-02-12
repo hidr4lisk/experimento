@@ -189,6 +189,17 @@ def debug_db(request):
     # para debug rápido (solo habilitar temporalmente)
     try:
         from django.db import connection
+        from django.core.management import call_command
+        
+        # Si pasan ?migrate=true, forzamos las migraciones
+        if request.GET.get('migrate') == 'true':
+            call_command('migrate', no_input=True)
+            call_command('init_users') # Si tuviéramos un comando, o ejecutamos el script
+            # Ejecutamos el contenido de init_users.py manualmente si es necesario
+            import subprocess
+            subprocess.run(["python", "init_users.py"], capture_output=True)
+            return JsonResponse({'status': 'Migrations and users initialized successfully'})
+
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
             row = cursor.fetchone()
