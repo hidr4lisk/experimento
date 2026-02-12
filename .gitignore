@@ -1,15 +1,18 @@
-# Virtual Environment
-venv/
-.venv/
-env/
-.env/
-ENV/
-
-# Python
+#######################################
+# PYTHON BYTECODE
+#######################################
 __pycache__/
 *.py[cod]
 *$py.class
+
+#######################################
+# C EXTENSIONS
+#######################################
 *.so
+
+#######################################
+# DISTRIBUTION / PACKAGING
+#######################################
 .Python
 build/
 develop-eggs/
@@ -23,25 +26,114 @@ parts/
 sdist/
 var/
 wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Django
+#######################################
+# VIRTUAL ENVIRONMENTS
+#######################################
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+#######################################
+# ENV FILES
+#######################################
+.env
+.env.*
+!.env.example
+
+#######################################
+# DJANGO
+#######################################
 *.log
-local_settings.py
 db.sqlite3
 db.sqlite3-journal
-/media
-/static
+media/
+staticfiles/
 
-# IDE
+#######################################
+# DJANGO MIGRATIONS CACHE (opcional)
+#######################################
+**/migrations/*.pyc
+**/migrations/__pycache__/
+
+#######################################
+# TESTING / COVERAGE
+#######################################
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+pytestdebug.log
+.pytest_cache/
+
+#######################################
+# TYPE CHECKERS
+#######################################
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+#######################################
+# LINTERS
+#######################################
+.ruff_cache/
+.pylint.d/
+
+#######################################
+# JUPYTER
+#######################################
+.ipynb_checkpoints
+
+#######################################
+# CELERY
+#######################################
+celerybeat-schedule
+celerybeat.pid
+
+#######################################
+# NODE / FRONTEND (si aplica)
+#######################################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+#######################################
+# IDE / EDITORS
+#######################################
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.pydevproject
 
-# OS
+#######################################
+# OS FILES
+#######################################
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+#######################################
+# GIT
+#######################################
+.git-credentials
+
+#######################################
+# MISC
+########################
