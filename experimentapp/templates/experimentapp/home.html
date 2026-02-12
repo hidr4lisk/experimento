@@ -257,7 +257,17 @@
     <div class="navbar">
         <h1>Control de Asistencia</h1>
         <div class="navbar-right">
-            <span>Bienvenido, {{ user.username }}</span>
+            <span>
+                {% if user.is_superuser %}
+                    PANEL DE ADMINISTRADOR
+                {% elif user.username == 'EMMA' %}
+                    Bienvenida Emperatriz.
+                {% elif user.username == 'Pipo' %}
+                    Bienvenido Capitán
+                {% else %}
+                    Bienvenido, {{ user.username }}
+                {% endif %}
+            </span>
             <a href="{% url 'logout' %}">Cerrar sesión</a>
         </div>
     </div>
