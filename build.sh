@@ -13,6 +13,7 @@ echo "==> Running migrations..."
 python manage.py makemigrations --no-input
 python manage.py migrate --no-input
 
-# Initialize default users
-echo "==> Initializing users..."
+# Initialize default users and agents
+echo "==> Initializing users and agents..."
 python init_users.py
+python manage.py populate_agents
