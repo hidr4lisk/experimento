@@ -30,7 +30,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',  # Temporarily disabled for debugging
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -88,5 +88,10 @@ SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "False") == "Tru
 CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE", "False") == "True"
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# CSRF settings
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "https://experimento-ikiy.onrender.com,https://*.onrender.com").split(",")
+# CSRF settings - List all trusted origins explicitly
+CSRF_TRUSTED_ORIGINS = [
+    "https://experimento-ikiy.onrender.com",
+    "https://localhost:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
