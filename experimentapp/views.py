@@ -219,6 +219,15 @@ def edit_record(request, record_id):
     }
     return render(request, 'experimentapp/edit_record.html', context)  
 
+@login_required(login_url='login')
+def delete_record(request, record_id):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    record = get_object_or_404(Record, id=record_id)
+    record.delete()
+    return redirect('home')
+
 def debug_db(request):
     """View para diagnosticar problemas de base de datos"""
     # No verificamos autenticación aquí para poder acceder aun cuando el login falla

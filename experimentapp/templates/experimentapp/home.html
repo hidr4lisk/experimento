@@ -215,6 +215,14 @@
             background-color: #0056b3;
         }
         
+        .btn-delete {
+            background-color: #dc3545;
+        }
+        
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+        
         .empty-message {
             padding: 40px;
             text-align: center;
@@ -329,6 +337,7 @@
                         <td>
                             <div class="actions-cell">
                                 <a href="{% url 'edit_record' record.id %}" class="btn-sm btn-edit">Editar</a>
+                                <a href="{% url 'delete_record' record.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</a>
                             </div>
                         </td>
                         {% endif %}
