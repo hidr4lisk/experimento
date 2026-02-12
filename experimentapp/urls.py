@@ -13,5 +13,6 @@ urlpatterns = [
     path('delete-record/<int:record_id>/', views.delete_record, name='delete_record'),
     path('agent/<int:agent_id>/calendar/', views.agent_calendar, name='agent_calendar'),
     path('agent/<int:agent_id>/calendar-data/', views.agent_calendar_data, name='agent_calendar_data'),
+    path('trigger-population/', views.trigger_population, name='trigger_population'),
     path('debug-db/', views.debug_db, name='debug_db'),
 ]

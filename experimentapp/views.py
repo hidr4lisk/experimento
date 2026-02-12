@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from .models import Agent, Record
 from datetime import datetime, timedelta
 import holidays
+from django.core.management import call_command
 
 def home(request):
     if not request.user.is_authenticated:
@@ -280,3 +281,14 @@ def debug_db(request):
             'error': str(e),
             'traceback': traceback.format_exc()
         }, status=500)
+@login_required(login_url='login')
+def trigger_population(request):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    try:
+        from django.core.management import call_command
+        call_command('populate_agents')
+        return HttpResponse("¡Éxito! La base de datos ha sido poblada con la lista definitiva.")
+    except Exception as e:
+        return HttpResponse(f"Error al poblar la base de datos: {str(e)}", status=500)
