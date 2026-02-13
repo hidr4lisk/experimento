@@ -190,8 +190,15 @@ def add_record(request):
     if request.method == "POST":
         agent_id = request.POST.get('agent')
         record_type = request.POST.get('record_type')
-        fecha_inicio = request.POST.get('fecha_inicio')
-        fecha_fin = request.POST.get('fecha_fin')
+        def parse_date(date_str):
+            if not date_str: return None
+            try:
+                return datetime.strptime(date_str, '%d/%m/%Y').strftime('%Y-%m-%d')
+            except ValueError:
+                return date_str
+
+        fecha_inicio = parse_date(request.POST.get('fecha_inicio'))
+        fecha_fin = parse_date(request.POST.get('fecha_fin'))
         notes = request.POST.get('notes', '')
         
         agent = get_object_or_404(Agent, id=agent_id)
@@ -219,10 +226,17 @@ def edit_record(request, record_id):
     record = get_object_or_404(Record, id=record_id)
     
     if request.method == "POST":
+        def parse_date(date_str):
+            if not date_str: return None
+            try:
+                return datetime.strptime(date_str, '%d/%m/%Y').strftime('%Y-%m-%d')
+            except ValueError:
+                return date_str
+
         record.agent_id = request.POST.get('agent')
         record.record_type = request.POST.get('record_type')
-        record.fecha_inicio = request.POST.get('fecha_inicio')
-        record.fecha_fin = request.POST.get('fecha_fin')
+        record.fecha_inicio = parse_date(request.POST.get('fecha_inicio'))
+        record.fecha_fin = parse_date(request.POST.get('fecha_fin'))
         record.notes = request.POST.get('notes', '')
         record.save()
         return redirect('home')

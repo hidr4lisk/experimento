@@ -33,6 +33,13 @@
             line-height: 1.5;
         }
 
+        /* Flatpickr Customization */
+        .flatpickr-calendar {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px !important;
+        }
+
         /* Navbar & Header */
         header {
             background: var(--bg-dark);
@@ -275,5 +282,19 @@
     </footer>
 
     {% block extra_js %}{% endblock %}
+
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".datepicker", {
+                locale: "es",
+                dateFormat: "d/m/Y",
+                allowInput: true
+            });
+        });
+    </script>
 </body>
 </html>

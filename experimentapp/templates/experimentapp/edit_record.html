@@ -34,12 +34,12 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                 <div>
                     <label for="fecha_inicio" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #475569;">Fecha Inicio</label>
-                    <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ record.fecha_inicio|date:'Y-m-d' }}" required
+                    <input type="text" id="fecha_inicio" name="fecha_inicio" value="{{ record.fecha_inicio|date:'d/m/Y' }}" class="datepicker" required
                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background: #f8fafc;">
                 </div>
                 <div>
                     <label for="fecha_fin" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #475569;">Fecha Fin</label>
-                    <input type="date" id="fecha_fin" name="fecha_fin" value="{{ record.fecha_fin|date:'Y-m-d' }}" required
+                    <input type="text" id="fecha_fin" name="fecha_fin" value="{{ record.fecha_fin|date:'d/m/Y' }}" class="datepicker" required
                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background: #f8fafc;">
                 </div>
             </div>
