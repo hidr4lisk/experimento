@@ -20,22 +20,20 @@ def calculate_agent_status(agent):
     """
     today = date.today()
     
-    # Buscar registros activos (que incluyan hoy) o futuros
+    # Buscar SOLO registros activos que incluyan HOY (no futuros)
+    # Un agente está de licencia solo si tiene un registro activo en este momento
     active_records = Record.objects.filter(
         agent=agent,
         fecha_inicio__lte=today,
         fecha_fin__gte=today
-    ) | Record.objects.filter(
-        agent=agent,
-        fecha_inicio__gt=today
-    )
-    
-    active_records = active_records.order_by('fecha_inicio')
+    ).order_by('fecha_inicio')
     
     if not active_records.exists():
+        # No hay registros activos hoy = está disponible
+        # (aunque tenga vacaciones programadas para el futuro)
         return {'available': True, 'return_date': None}
     
-    # Encontrar el último día de licencia considerando registros consecutivos
+    # Encontrar el último día de licencia de los registros activos
     last_end_date = max(r.fecha_fin for r in active_records)
     
     # Calcular siguiente día hábil después del último día de licencia
