@@ -289,19 +289,31 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            flatpickr(".datepicker", {
-                locale: {
-                    ...flatpickr.l10ns.es,
-                    firstDayOfWeek: 0 // Domingo
-                },
-                dateFormat: "d/m/Y",
-                allowInput: true,
-                disable: [
-                    function(date) {
-                        return (date.getDay() === 0 || date.getDay() === 6);
+            if (typeof flatpickr !== 'undefined') {
+                var config = {
+                    dateFormat: "d/m/Y",
+                    allowInput: true,
+                    disable: [
+                        function(date) {
+                            return (date.getDay() === 0 || date.getDay() === 6);
+                        }
+                    ],
+                    onReady: function(selectedDates, dateStr, instance) {
+                        instance.l10n.firstDayOfWeek = 0; // Domingo
+                        instance.redraw();
                     }
-                ]
-            });
+                };
+
+                if (flatpickr.l10ns.es) {
+                    config.locale = Object.assign({}, flatpickr.l10ns.es, {
+                        firstDayOfWeek: 0
+                    });
+                } else {
+                    config.locale = { firstDayOfWeek: 0 };
+                }
+
+                flatpickr(".datepicker", config);
+            }
         });
     </script>
 </body>
