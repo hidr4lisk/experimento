@@ -5,9 +5,51 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Agent, Record
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import holidays
 from django.core.management import call_command
+
+def calculate_agent_status(agent):
+    """
+    Calcula el estado de disponibilidad de un agente.
+    
+    Retorna un diccionario con:
+    - 'available': True si el agente está disponible, False si está de licencia
+    - 'return_date': fecha de reintegro (solo si available=False), calculada
+                     considerando solo días hábiles (lun-vie, excluyendo feriados)
+    """
+    today = date.today()
+    
+    # Buscar registros activos (que incluyan hoy) o futuros
+    active_records = Record.objects.filter(
+        agent=agent,
+        fecha_inicio__lte=today,
+        fecha_fin__gte=today
+    ) | Record.objects.filter(
+        agent=agent,
+        fecha_inicio__gt=today
+    )
+    
+    active_records = active_records.order_by('fecha_inicio')
+    
+    if not active_records.exists():
+        return {'available': True, 'return_date': None}
+    
+    # Encontrar el último día de licencia considerando registros consecutivos
+    last_end_date = max(r.fecha_fin for r in active_records)
+    
+    # Calcular siguiente día hábil después del último día de licencia
+    return_date = last_end_date + timedelta(days=1)
+    ar_holidays = holidays.AR(years=range(return_date.year, return_date.year + 2))
+    
+    # Saltar fines de semana y feriados
+    while return_date.weekday() >= 5 or return_date in ar_holidays:
+        return_date += timedelta(days=1)
+        # Actualizar feriados si cambiamos de año
+        if return_date.year not in ar_holidays.years:
+            ar_holidays = holidays.AR(years=range(return_date.year, return_date.year + 2))
+    
+    return {'available': False, 'return_date': return_date}
 
 def home(request):
     if not request.user.is_authenticated:
@@ -59,9 +101,17 @@ def agent_calendar(request, agent_id):
     agent = get_object_or_404(Agent, id=agent_id)
     records = Record.objects.filter(agent=agent)
     
+    # Obtener todos los agentes para el dropdown
+    all_agents = Agent.objects.all().order_by('name')
+    
+    # Calcular estado de disponibilidad del agente
+    agent_status = calculate_agent_status(agent)
+    
     context = {
         'agent': agent,
         'records': records,
+        'all_agents': all_agents,
+        'agent_status': agent_status,
     }
     return render(request, 'experimentapp/agent_calendar.html', context)
 

@@ -63,20 +63,98 @@
             border-radius: 4px;
         }
 
+        /* Agent Dropdown Styles */
+        .agent-selector-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .agent-dropdown {
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            color: #0f172a;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 280px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .agent-dropdown:hover {
+            border-color: var(--primary);
+        }
+
+        .agent-dropdown:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Status Badge Styles */
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-available {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-return {
+            background: #f59e0b;
+            color: #78350f;
+        }
+
         @media (max-width: 768px) {
             .fc .fc-toolbar {
                 flex-direction: column;
                 gap: 10px;
+            }
+            
+            .agent-dropdown {
+                min-width: 100%;
+            }
+            
+            .agent-selector-container {
+                width: 100%;
             }
         }
     </style>
 {% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
     <div>
         <h1 class="page-title">Calendario Individual</h1>
-        <p class="page-subtitle">Visualización de licencias y novedades para <b>{{ agent.name }}</b></p>
+        <div class="agent-selector-container">
+            <select id="agent-selector" class="agent-dropdown">
+                {% for a in all_agents %}
+                <option value="{{ a.id }}" {% if a.id == agent.id %}selected{% endif %}>
+                    {{ a.name }}
+                </option>
+                {% endfor %}
+            </select>
+            
+            {% if agent_status.available %}
+            <span class="status-badge status-available">DISPONIBLE</span>
+            {% else %}
+            <span class="status-badge status-return">
+                SE REINTEGRA EL: {{ agent_status.return_date|date:"d/m/Y" }}
+            </span>
+            {% endif %}
+        </div>
     </div>
     <a href="{% url 'home' %}" class="btn btn-secondary">Volver al Panel</a>
 </div>
@@ -112,6 +190,16 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Agent selector dropdown navigation
+            var agentSelector = document.getElementById('agent-selector');
+            if (agentSelector) {
+                agentSelector.addEventListener('change', function() {
+                    var agentId = this.value;
+                    window.location.href = '/agent/' + agentId + '/calendar/';
+                });
+            }
+            
+            // Calendar initialization
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
