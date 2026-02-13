@@ -38,7 +38,7 @@ def home(request):
     # Ordenamiento
     sort_by = request.GET.get('sort', 'name' if current_view == 'agentes' else '-fecha_inicio')
     
-    agents = Agent.objects.all()
+    agents = Agent.objects.all().order_by('name')
     if current_view == 'agentes':
         agents = agents.order_by(sort_by)
     else:
@@ -204,7 +204,7 @@ def add_record(request):
         )
         return redirect('home')
     
-    agents = Agent.objects.all()
+    agents = Agent.objects.all().order_by('name')
     context = {
         'agents': agents,
         'record_types': Record.RECORD_TYPES
@@ -227,7 +227,7 @@ def edit_record(request, record_id):
         record.save()
         return redirect('home')
     
-    agents = Agent.objects.all()
+    agents = Agent.objects.all().order_by('name')
     context = {
         'record': record,
         'agents': agents,
