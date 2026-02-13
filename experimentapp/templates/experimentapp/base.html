@@ -290,9 +290,17 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             flatpickr(".datepicker", {
-                locale: "es",
+                locale: {
+                    ...flatpickr.l10ns.es,
+                    firstDayOfWeek: 0 // Domingo
+                },
                 dateFormat: "d/m/Y",
-                allowInput: true
+                allowInput: true,
+                disable: [
+                    function(date) {
+                        return (date.getDay() === 0 || date.getDay() === 6);
+                    }
+                ]
             });
         });
     </script>
