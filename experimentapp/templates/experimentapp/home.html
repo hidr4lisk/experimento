@@ -181,9 +181,12 @@
                     <input type="text" name="search" placeholder="Nombre, nota o ubicación..." value="{{ request.GET.search|default:'' }}">
                 </div>
                 
-                <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 10px; align-items: flex-end;">
                     <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">Buscar</button>
                     <a href="?view=asistencia" class="btn btn-secondary">Limpiar</a>
+                    {% if is_admin %}
+                    <a href="?view=asistencia&duplicates=true" class="btn {% if request.GET.duplicates == 'true' %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 10px 20px;">DUPLICADOS</a>
+                    {% endif %}
                 </div>
             </form>
         </div>

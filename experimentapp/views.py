@@ -62,6 +62,7 @@ def home(request):
     agent_filter = request.GET.get('agent')
     record_type_filter = request.GET.get('type')
     search_query = request.GET.get('search')
+    show_duplicates = request.GET.get('duplicates') == 'true'
     
     if agent_filter:
         records = records.filter(agent_id=agent_filter)
@@ -74,6 +75,18 @@ def home(request):
             Q(agent__location__icontains=search_query) | 
             Q(notes__icontains=search_query)
         )
+    
+    if show_duplicates:
+        from django.db.models import Exists, OuterRef
+        overlapping = Record.objects.filter(
+            agent=OuterRef('agent'),
+            fecha_inicio__lte=OuterRef('fecha_fin'),
+            fecha_fin__gte=OuterRef('fecha_inicio')
+        ).exclude(id=OuterRef('id'))
+        
+        records = records.annotate(
+            has_overlap=Exists(overlapping)
+        ).filter(has_overlap=True)
     
     # Ordenamiento
     sort_by = request.GET.get('sort', 'name' if current_view == 'agentes' else '-fecha_inicio')
@@ -238,6 +251,17 @@ def add_record(request):
     if request.method == "POST":
         agent_id = request.POST.get('agent')
         record_type = request.POST.get('record_type')
+        notes = request.POST.get('notes', '')
+        
+        fechas_inicio = request.POST.getlist('fecha_inicio[]')
+        fechas_fin = request.POST.getlist('fecha_fin[]')
+        
+        # Fallback si el JS no se usó y enviaron "fecha_inicio" normal
+        if not fechas_inicio:
+            fechas_inicio = request.POST.getlist('fecha_inicio')
+        if not fechas_fin:
+            fechas_fin = request.POST.getlist('fecha_fin')
+
         def parse_date(date_str):
             if not date_str: return None
             try:
@@ -245,18 +269,22 @@ def add_record(request):
             except ValueError:
                 return date_str
 
-        fecha_inicio = parse_date(request.POST.get('fecha_inicio'))
-        fecha_fin = parse_date(request.POST.get('fecha_fin'))
-        notes = request.POST.get('notes', '')
-        
         agent = get_object_or_404(Agent, id=agent_id)
-        Record.objects.create(
-            agent=agent,
-            record_type=record_type,
-            fecha_inicio=fecha_inicio,
-            fecha_fin=fecha_fin,
-            notes=notes
-        )
+        
+        for i in range(len(fechas_inicio)):
+            f_inicio = parse_date(fechas_inicio[i])
+            if not f_inicio: continue
+            
+            f_fin_str = fechas_fin[i] if i < len(fechas_fin) else None
+            f_fin = parse_date(f_fin_str) if f_fin_str else f_inicio
+            
+            Record.objects.create(
+                agent=agent,
+                record_type=record_type,
+                fecha_inicio=f_inicio,
+                fecha_fin=f_fin,
+                notes=notes
+            )
         return redirect('home')
     
     agents = Agent.objects.all().order_by('name')
@@ -283,8 +311,11 @@ def edit_record(request, record_id):
 
         record.agent_id = request.POST.get('agent')
         record.record_type = request.POST.get('record_type')
-        record.fecha_inicio = parse_date(request.POST.get('fecha_inicio'))
-        record.fecha_fin = parse_date(request.POST.get('fecha_fin'))
+        f_inicio = parse_date(request.POST.get('fecha_inicio'))
+        f_fin = parse_date(request.POST.get('fecha_fin'))
+        
+        record.fecha_inicio = f_inicio
+        record.fecha_fin = f_fin if f_fin else f_inicio
         record.notes = request.POST.get('notes', '')
         record.save()
         return redirect('home')

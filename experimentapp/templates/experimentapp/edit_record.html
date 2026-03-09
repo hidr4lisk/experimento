@@ -38,8 +38,9 @@
                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background: #f8fafc;">
                 </div>
                 <div>
-                    <label for="fecha_fin" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #475569;">Fecha Fin</label>
-                    <input type="text" id="fecha_fin" name="fecha_fin" value="{{ record.fecha_fin|date:'d/m/Y' }}" class="datepicker" required
+                    <label for="fecha_fin" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #475569;">Fecha Fin (Opcional)</label>
+                    <input type="text" id="fecha_fin" name="fecha_fin" value="{{ record.fecha_fin|date:'d/m/Y' }}" class="datepicker"
+                           placeholder="Igual a Inicio si está vacío"
                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background: #f8fafc;">
                 </div>
             </div>
