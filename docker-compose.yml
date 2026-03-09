@@ -32,3 +32,5 @@ services:
 
 volumes:
   postgres_data:
+    external: true
+    name: experimento_postgres_data
