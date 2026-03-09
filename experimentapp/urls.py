@@ -1,8 +1,10 @@
 from django.urls import path
+from django.http import HttpResponse
 from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('ping/', lambda r: HttpResponse("PONG"), name='ping'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('add-agent/', views.add_agent, name='add_agent'),

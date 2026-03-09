@@ -96,13 +96,17 @@ function addPeriodRow() {
     // Initialize flatpickr for the new inputs
     const newInputs = row.querySelectorAll('.datepicker');
     if (typeof flatpickr !== 'undefined') {
-        var config = {
+        var config = window.fpConfig || {
             dateFormat: "d/m/Y",
             allowInput: true,
             disable: [
                 function(date) { return (date.getDay() === 0 || date.getDay() === 6); }
             ],
-            locale: flatpickr.l10ns.es ? Object.assign({}, flatpickr.l10ns.es, { firstDayOfWeek: 0 }) : { firstDayOfWeek: 0 }
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 0 && instance.input.value) {
+                    instance.setDate(instance.input.value, false, "d/m/Y");
+                }
+            }
         };
         flatpickr(newInputs, config);
     }

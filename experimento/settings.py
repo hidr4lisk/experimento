@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-change-in-pro
 
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,experimento-ikiy.onrender.com,.onrender.com").split(",")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,gepyc.online,experimento-ikiy.onrender.com,.onrender.com").split(",")
 
 
 INSTALLED_APPS = [
@@ -118,6 +118,8 @@ USE_X_FORWARDED_PORT = True
 CSRF_TRUSTED_ORIGINS = [
     "https://experimento-ikiy.onrender.com",
     "https://*.onrender.com",
+    "http://gepyc.online",
+    "https://gepyc.online",
 ]
 # Ensure CSRF cookie is sent over HTTPS only
 CSRF_COOKIE_HTTPONLY = False  # Set to False to allow JS access if needed, but True is safer

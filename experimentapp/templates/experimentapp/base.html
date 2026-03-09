@@ -288,6 +288,9 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
     <script>
+        // Config global de flatpickr - reutilizable por filas dinámicas
+        window.fpConfig = null;
+
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof flatpickr !== 'undefined') {
                 var config = {
@@ -299,8 +302,15 @@
                         }
                     ],
                     onReady: function(selectedDates, dateStr, instance) {
-                        instance.l10n.firstDayOfWeek = 0; // Domingo
+                        instance.l10n.firstDayOfWeek = 0;
                         instance.redraw();
+                    },
+                    // Fix: si el usuario tipea y presiona Enter sin seleccionar del picker,
+                    // flatpickr puede borrar el valor. onClose fuerza parsear el texto ingresado.
+                    onClose: function(selectedDates, dateStr, instance) {
+                        if (selectedDates.length === 0 && instance.input.value) {
+                            instance.setDate(instance.input.value, false, "d/m/Y");
+                        }
                     }
                 };
 
@@ -312,6 +322,7 @@
                     config.locale = { firstDayOfWeek: 0 };
                 }
 
+                window.fpConfig = config;
                 flatpickr(".datepicker", config);
             }
         });

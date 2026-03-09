@@ -371,8 +371,15 @@ def debug_db(request):
             cursor.execute("SELECT 1")
             row = cursor.fetchone()
         
-        from django.contrib.auth.models import User
         from .models import Agent, Record
+        from django.template.loader import render_to_string
+        
+        # Test rendering a template
+        try:
+            rendered_login = render_to_string("experimentapp/login.html")
+            render_test = f"OK (Size: {len(rendered_login)})"
+        except Exception as te:
+            render_test = f"ERROR: {str(te)}"
         
         db_info = {
             'connection': 'OK' if row else 'Failed',
@@ -381,6 +388,7 @@ def debug_db(request):
             'user_count': User.objects.count(),
             'agent_count': Agent.objects.count(),
             'record_count': Record.objects.count(),
+            'render_test_login': render_test,
         }
         return JsonResponse(db_info)
     except Exception as e:
