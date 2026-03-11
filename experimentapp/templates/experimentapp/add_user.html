@@ -1,0 +1,40 @@
+{% extends 'experimentapp/base.html' %}
+
+{% block title %}Agregar Usuario - SIA{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Nuevo Usuario</h1>
+    <p class="page-subtitle">Crea una nueva cuenta de acceso</p>
+</div>
+
+<div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Nombre de Usuario</label>
+            <input type="text" name="username" class="btn-secondary" style="width: 100%; text-align: left;" required>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Email</label>
+            <input type="email" name="email" class="btn-secondary" style="width: 100%; text-align: left;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Contraseña</label>
+            <input type="password" name="password" class="btn-secondary" style="width: 100%; text-align: left;" required>
+        </div>
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Rol Asignado</label>
+            <select name="role" class="btn-secondary" style="width: 100%; padding: 10px;">
+                <option value="lector">Lector (Solo vista)</option>
+                <option value="editor">Editor (Agrega/Edita registros)</option>
+                <option value="admin">Administrador (Control total)</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <a href="{% url 'manage_users' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Crear Usuario</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

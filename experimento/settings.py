@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-change-in-production")
 
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,gepyc.online,experimento-ikiy.onrender.com,.onrender.com").split(",")
 
@@ -85,7 +85,23 @@ DATABASES = {
 }
 
 
-AUTH_PASSWORD_VALIDATORS = []
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 
 LANGUAGE_CODE = 'es-ar'
@@ -122,7 +138,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://gepyc.online",
 ]
 # Ensure CSRF cookie is sent over HTTPS only
-CSRF_COOKIE_HTTPONLY = False  # Set to False to allow JS access if needed, but True is safer
+CSRF_COOKIE_HTTPONLY = True  # Enforced for security
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 

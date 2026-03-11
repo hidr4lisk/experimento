@@ -6,10 +6,10 @@ services:
     container_name: experimento_db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgrespassword}
       POSTGRES_DB: experimento_db
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -25,7 +25,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgres://postgres:postgrespassword@db:5432/experimento_db
+      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD:-postgrespassword}@db:5432/experimento_db
     depends_on:
       - db
     restart: unless-stopped

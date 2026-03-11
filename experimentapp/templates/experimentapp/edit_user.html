@@ -1,0 +1,28 @@
+{% extends 'experimentapp/base.html' %}
+
+{% block title %}Editar Rol - SIA{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Modificar Rol: {{ target_user.username }}</h1>
+    <p class="page-subtitle">Cambia los permisos de acceso para este usuario</p>
+</div>
+
+<div class="glass-card" style="max-width: 500px; margin: 0 auto;">
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 12px; font-weight: 600;">Seleccionar Nuevo Rol</label>
+            <select name="role" class="btn-secondary" style="width: 100%; padding: 12px; font-size: 15px;">
+                <option value="lector" {% if not target_user.is_staff %}selected{% endif %}>Lector (Solo vista - Como Emma/Pipo)</option>
+                <option value="editor" {% if target_user.is_staff and not target_user.is_superuser %}selected{% endif %}>Editor (Puede agregar/editar registros)</option>
+                <option value="admin" {% if target_user.is_superuser %}selected{% endif %}>Administrador (Control total + Gestión de usuarios)</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <a href="{% url 'manage_users' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

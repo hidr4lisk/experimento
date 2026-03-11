@@ -1,47 +1,39 @@
-# En la carpeta del proyecto
-python3 -m venv venv
+# SIA - Control de Asistencia
 
-# Activar el entorno
-source venv/bin/activate  # En Linux/Mac
-# o si usas Windows: venv\Scripts\activate
+Sistema Interno de Administración para la Gerencia de Planeamiento y Concesiones.
 
-# si hay que clonar el repositorio
+## 🚀 Características
 
-# 1. Eliminar el venv antiguo
-rm -rf venv
+- **Dashboard Principal**: Consulta rápida de registros de asistencia y personal.
+- **Calendario por Agente**: Visualización interactiva con feriados nacionales (Argentina) integrados.
+- **Gestión de Roles**:
+  - **ADMIN**: Control total y administración de usuarios.
+  - **EDITOR**: Gestión de agentes y registros de asistencia.
+  - **LECTOR**: Consulta y visualización institucional.
+- **Seguridad**: Protección de endpoints, passwords validadas y comunicación segura.
 
-# 2. Crear uno nuevo en la ruta actual
-python3 -m venv venv
+## 🛠️ Requisitos Rápidos (Docker)
 
-# 3. Activar
-source venv/bin/activate
+La aplicación está diseñada para correr en un entorno Dockerizado.
 
-# Actualizar pip
-pip install --upgrade pip
+### Despliegue con Docker Compose
+```bash
+docker-compose up -d --build
+```
+La aplicación estará disponible en `http://localhost:8000`.
 
-# Instalar Django
-pip install django
+### Variables de Entorno (.env)
+Asegúrese de configurar las siguientes variables:
+- `SECRET_KEY`: Clave única para la sesión.
+- `DEBUG`: `False` en producción.
+- `POSTGRES_PASSWORD`: Contraseña para la base de datos distribuida.
 
-# (Opcional pero recomendado) crear requirements.txt
-pip freeze > requirements.txt
+## 📁 Estructura del Proyecto
 
-# Crear proyecto Django
-django-admin startproject nombre_del_proyecto .
+- `experimentapp/`: Lógica principal de la aplicación Django.
+- `experimento/`: Configuración del core del proyecto.
+- `scripts/`: Herramientas de backup y mantenimiento.
+- `templates/`: Interfaz de usuario premium y responsiva.
 
-# Crear una app para tu aplicación
-python manage.py startapp nombre_app
-
-4. Configurar la base de datos
-Ejecutar migraciones: python manage.py migrate
-Crear un superusuario (admin): python manage.py createsuperuser
-
-5. Crear usuarios adicionales
-Dos opciones:
-
-Opción A: Desde la terminal con un script
-Opción B: Desde el panel de admin de Django
-
-6. Crear la vista de login
-Crear templates (HTML)
-Configurar URLs
-Usar vistas class-based (LoginView de Django) o function-based
+---
+© 2026 - Diseñado y Producido por **Federico Furgiuele**.

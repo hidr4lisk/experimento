@@ -91,19 +91,29 @@ def home(request):
     # Ordenamiento
     sort_by = request.GET.get('sort', 'name' if current_view == 'agentes' else '-fecha_inicio')
     
+    # Check if any filter is applied
+    has_filter = any([agent_filter, record_type_filter, search_query, show_duplicates])
+    
+    if current_view == 'asistencia' and not has_filter:
+        records = Record.objects.none()
+    elif current_view == 'asistencia':
+        records = records.order_by(sort_by)
+
     agents = Agent.objects.all().order_by('name')
     if current_view == 'agentes':
         agents = agents.order_by(sort_by)
-    else:
-        records = records.order_by(sort_by)
+    
     is_admin = request.user.is_superuser
+    is_editor = request.user.is_superuser or request.user.is_staff
     
     context = {
         'records': records,
         'agents': agents,
         'is_admin': is_admin,
+        'is_editor': is_editor,
         'record_types': Record.RECORD_TYPES,
         'current_view': current_view,
+        'has_filter': has_filter,
     }
     return render(request, 'experimentapp/home.html', context)
 
@@ -216,7 +226,7 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def add_agent(request):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("No autorizado", status=403)
     
     if request.method == "POST":
@@ -229,7 +239,7 @@ def add_agent(request):
 
 @login_required(login_url='login')
 def edit_agent(request, agent_id):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("No autorizado", status=403)
     
     agent = get_object_or_404(Agent, id=agent_id)
@@ -245,7 +255,7 @@ def edit_agent(request, agent_id):
 
 @login_required(login_url='login')
 def add_record(request):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("No autorizado", status=403)
     
     if request.method == "POST":
@@ -296,7 +306,7 @@ def add_record(request):
 
 @login_required(login_url='login')
 def edit_record(request, record_id):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("No autorizado", status=403)
     
     record = get_object_or_404(Record, id=record_id)
@@ -330,7 +340,7 @@ def edit_record(request, record_id):
 
 @login_required(login_url='login')
 def delete_record(request, record_id):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("No autorizado", status=403)
     
     record = get_object_or_404(Record, id=record_id)
@@ -339,7 +349,7 @@ def delete_record(request, record_id):
 
 @login_required(login_url='login')
 def delete_agent(request, agent_id):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("No autorizado", status=403)
     
     agent = get_object_or_404(Agent, id=agent_id)
@@ -357,14 +367,12 @@ def debug_db(request):
         
         # Si pasan ?migrate=true, forzamos las migraciones
         if request.GET.get('migrate') == 'true':
+            if not request.user.is_superuser:
+                return JsonResponse({'error': 'No autorizado'}, status=403)
             call_command('migrate', no_input=True)
-            # El script init_users.py no es un comando de Django, se corre por separado
-            import subprocess
-            res = subprocess.run(["python", "init_users.py"], capture_output=True, text=True)
             return JsonResponse({
-                'status': 'Migrations and users initialization attempted',
+                'status': 'Migrations attempted',
                 'migration_output': 'OK',
-                'user_init_output': res.stdout or res.stderr
             })
 
         with connection.cursor() as cursor:
@@ -399,7 +407,7 @@ def debug_db(request):
         }, status=500)
 @login_required(login_url='login')
 def trigger_population(request):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("No autorizado", status=403)
     
     try:
@@ -408,3 +416,70 @@ def trigger_population(request):
         return HttpResponse("¡Éxito! La base de datos ha sido poblada con la lista definitiva.")
     except Exception as e:
         return HttpResponse(f"Error al poblar la base de datos: {str(e)}", status=500)
+
+@login_required(login_url='login')
+def manage_users(request):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    users = User.objects.all().order_by('username')
+    return render(request, 'experimentapp/manage_users.html', {'users': users})
+
+@login_required(login_url='login')
+def edit_user_role(request, user_id):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    user = get_object_or_404(User, id=user_id)
+    if request.method == "POST":
+        role = request.POST.get('role')
+        if role == 'admin':
+            user.is_superuser = True
+            user.is_staff = True
+        elif role == 'editor':
+            user.is_superuser = False
+            user.is_staff = True
+        else: # lector
+            user.is_superuser = False
+            user.is_staff = False
+        user.save()
+        return redirect('manage_users')
+    
+    return render(request, 'experimentapp/edit_user.html', {'target_user': user})
+
+@login_required(login_url='login')
+def delete_user(request, user_id):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    user = get_object_or_404(User, id=user_id)
+    if user.is_superuser and User.objects.filter(is_superuser=True).count() <= 1:
+        return HttpResponse("No puedes eliminar al único superusuario", status=400)
+    
+    user.delete()
+    return redirect('manage_users')
+
+@login_required(login_url='login')
+def add_user(request):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        role = request.POST.get('role')
+        
+        if User.objects.filter(username=username).exists():
+            return HttpResponse("El usuario ya existe", status=400)
+            
+        user = User.objects.create_user(username=username, email=email, password=password)
+        if role == 'admin':
+            user.is_superuser = True
+            user.is_staff = True
+        elif role == 'editor':
+            user.is_staff = True
+        user.save()
+        return redirect('manage_users')
+    
+    return render(request, 'experimentapp/add_user.html')

@@ -142,7 +142,7 @@
     <div class="glass-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 20px;">
             <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Registros de Asistencia</h2>
-            {% if is_admin %}
+            {% if is_editor %}
             <a href="{% url 'add_record' %}" class="btn btn-primary">
                 <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Registro
             </a>
@@ -184,8 +184,8 @@
                 <div style="display: flex; gap: 10px; align-items: flex-end;">
                     <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">Buscar</button>
                     <a href="?view=asistencia" class="btn btn-secondary">Limpiar</a>
-                    {% if is_admin %}
-                    <a href="?view=asistencia&duplicates=true" class="btn {% if request.GET.duplicates == 'true' %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 10px 20px;">DUPLICADOS</a>
+                    {% if is_editor %}
+                    <a href="?view=asistencia&duplicates=true" class="btn {% if request.GET.duplicates == 'true' %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 10px 20px;">Duplicados</a>
                     {% endif %}
                 </div>
             </form>
@@ -231,7 +231,7 @@
                             </a>
                         </th>
                         <th>Notas</th>
-                        {% if is_admin %}<th style="text-align: right;">Acciones</th>{% endif %}
+                        {% if is_editor %}<th style="text-align: right;">Acciones</th>{% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -246,7 +246,7 @@
                         <td style="font-weight: 500;">{{ record.fecha_inicio|date:"d/m/y" }}</td>
                         <td style="font-weight: 500;">{{ record.fecha_fin|date:"d/m/y" }}</td>
                         <td style="color: var(--text-muted); font-size: 13px;">{{ record.notes|truncatewords:10 }}</td>
-                        {% if is_admin %}
+                        {% if is_editor %}
                         <td style="text-align: right;">
                             <div style="display: flex; gap: 8px; justify-content: flex-end;">
                                 <a href="{% url 'edit_record' record.id %}" class="btn btn-secondary btn-sm">Editar</a>
@@ -260,7 +260,11 @@
             </table>
             {% else %}
             <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
-                <p style="font-size: 16px;">No se encontraron registros activos.</p>
+                {% if not has_filter %}
+                <p style="font-size: 16px;">Seleccione un filtro para ver los registros de asistencia.</p>
+                {% else %}
+                <p style="font-size: 16px;">No se encontraron registros que coincidan con los filtros.</p>
+                {% endif %}
             </div>
             {% endif %}
         </div>
@@ -271,7 +275,7 @@
     <div class="glass-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Personal de la Gerencia</h2>
-            {% if is_admin %}
+            {% if is_editor %}
             <a href="{% url 'add_agent' %}" class="btn btn-primary">
                 <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
             </a>
@@ -298,7 +302,7 @@
                                 </span>
                             </a>
                         </th>
-                        {% if is_admin %}<th style="text-align: right;">Acciones</th>{% endif %}
+                        {% if is_editor %}<th style="text-align: right;">Acciones</th>{% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -306,7 +310,7 @@
                     <tr>
                         <td style="font-weight: 600;">{{ agent.name }}</td>
                         <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
-                        {% if is_admin %}
+                        {% if is_editor %}
                         <td style="text-align: right;">
                             <div style="display: flex; gap: 8px; justify-content: flex-end;">
                                 <a href="{% url 'edit_agent' agent.id %}" class="btn btn-secondary btn-sm">Editar</a>

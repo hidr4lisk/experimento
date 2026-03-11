@@ -17,4 +17,8 @@ urlpatterns = [
     path('agent/<int:agent_id>/calendar-data/', views.agent_calendar_data, name='agent_calendar_data'),
     path('trigger-population/', views.trigger_population, name='trigger_population'),
     path('debug-db/', views.debug_db, name='debug_db'),
+    path('manage-users/', views.manage_users, name='manage_users'),
+    path('add-user/', views.add_user, name='add_user'),
+    path('edit-user/<int:user_id>/', views.edit_user_role, name='edit_user'),
+    path('delete-user/<int:user_id>/', views.delete_user, name='delete_user'),
 ]
