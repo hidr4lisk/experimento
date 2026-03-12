@@ -153,12 +153,10 @@ opacity: 1;
             <div style="display: flex; flex-direction: column; gap: 5px;">
                 <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Agente</label>
                 <select name="agent" onchange="this.form.submit()">
-                    <option value="" {% if 'agent' not in request.GET %}selected{% endif %} disabled>Seleccione un
-                        Agente</option>
-                    <option value="all" {% if request.GET.agent=='all' %}selected{% endif %}>Todos los Agentes</option>
+                    <option value="" {% if 'agent' not in request.GET %}selected{% endif %} disabled>Seleccione un Agente</option>
+                    <option value="all" {% if request.GET.agent == 'all' %}selected{% endif %}>Todos los Agentes</option>
                     {% for agent in agents %}
-                    <option value="{{ agent.id }}" {% if request.GET.agent==agent.id|stringformat:"s" %}selected{% endif
-                        %}>
+                    <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>
                         {{ agent.name }}
                     </option>
                     {% endfor %}
@@ -170,7 +168,7 @@ opacity: 1;
                 <select name="type" onchange="this.form.submit()">
                     <option value="">Todos los tipos</option>
                     {% for value, label in record_types %}
-                    <option value="{{ value }}" {% if request.GET.type==value %}selected{% endif %}>
+                    <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
                         {{ label }}
                     </option>
                     {% endfor %}
@@ -206,8 +204,7 @@ opacity: 1;
                             class="sort-link">
                             Agente
                             <span class="sort-arrow {% if 'agent__name' in request.GET.sort %}active{% endif %}">
-                                {% if request.GET.sort == 'agent__name' %}▲{% elif request.GET.sort == '-agent__name'
-                                %}▼{% else %}⇅{% endif %}
+                                {% if request.GET.sort == 'agent__name' %}▲{% elif request.GET.sort == '-agent__name' %}▼{% else %}⇅{% endif %}
                             </span>
                         </a>
                     </th>
@@ -216,8 +213,7 @@ opacity: 1;
                             class="sort-link">
                             Ubicación
                             <span class="sort-arrow {% if 'agent__location' in request.GET.sort %}active{% endif %}">
-                                {% if request.GET.sort == 'agent__location' %}▲{% elif request.GET.sort ==
-                                '-agent__location' %}▼{% else %}⇅{% endif %}
+                                {% if request.GET.sort == 'agent__location' %}▲{% elif request.GET.sort == '-agent__location' %}▼{% else %}⇅{% endif %}
                             </span>
                         </a>
                     </th>
@@ -227,9 +223,8 @@ opacity: 1;
                             class="sort-link">
                             Inicio
                             <span
-                                class="sort-arrow {% if 'fecha_inicio' in request.GET.sort or not request.GET.sort %}active{% endif %}">
-                                {% if request.GET.sort == 'fecha_inicio' %}▲{% elif request.GET.sort == '-fecha_inicio'
-                                or not request.GET.sort %}▼{% else %}⇅{% endif %}
+                                class="sort-arrow {% if request.GET.sort == 'fecha_inicio' or not request.GET.sort %}active{% endif %}">
+                                {% if request.GET.sort == 'fecha_inicio' %}▲{% elif request.GET.sort == '-fecha_inicio' or not request.GET.sort %}▼{% else %}⇅{% endif %}
                             </span>
                         </a>
                     </th>
@@ -237,9 +232,8 @@ opacity: 1;
                         <a href="?view=asistencia&sort={% if request.GET.sort == 'fecha_fin' %}-fecha_fin{% else %}fecha_fin{% endif %}"
                             class="sort-link">
                             Fin
-                            <span class="sort-arrow {% if 'fecha_fin' in request.GET.sort %}active{% endif %}">
-                                {% if request.GET.sort == 'fecha_fin' %}▲{% elif request.GET.sort == '-fecha_fin' %}▼{%
-                                else %}⇅{% endif %}
+                            <span class="sort-arrow {% if request.GET.sort == 'fecha_fin' %}active{% endif %}">
+                                {% if request.GET.sort == 'fecha_fin' %}▲{% elif request.GET.sort == '-fecha_fin' %}▼{% else %}⇅{% endif %}
                             </span>
                         </a>
                     </th>
@@ -355,8 +349,7 @@ opacity: 1;
                             Nombre del Agente
                             <span
                                 class="sort-arrow {% if 'name' in request.GET.sort or not request.GET.sort and current_view == 'agentes' %}active{% endif %}">
-                                {% if request.GET.sort == 'name' or not request.GET.sort and current_view == 'agentes'
-                                %}▲{% elif request.GET.sort == '-name' %}▼{% else %}⇅{% endif %}
+                                {% if request.GET.sort == 'name' or not request.GET.sort and current_view == 'agentes' %}▲{% elif request.GET.sort == '-name' %}▼{% else %}⇅{% endif %}
                             </span>
                         </a>
                     </th>
@@ -365,8 +358,7 @@ opacity: 1;
                             class="sort-link">
                             Ubicación / Área
                             <span class="sort-arrow {% if 'location' in request.GET.sort %}active{% endif %}">
-                                {% if request.GET.sort == 'location' %}▲{% elif request.GET.sort == '-location' %}▼{%
-                                else %}⇅{% endif %}
+                                {% if request.GET.sort == 'location' %}▲{% elif request.GET.sort == '-location' %}▼{% else %}⇅{% endif %}
                             </span>
                         </a>
                     </th>
