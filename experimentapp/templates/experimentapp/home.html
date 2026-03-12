@@ -151,7 +151,8 @@
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Agente</label>
                     <select name="agent" onchange="this.form.submit()">
-                        <option value="">Todos los agentes</option>
+                        <option value="" {% if not request.GET.agent %}selected{% endif %} disabled>Seleccione un Agente</option>
+                        <option value="">Todos los Agentes</option>
                         {% for agent in agents %}
                         <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>
                             {{ agent.name }}

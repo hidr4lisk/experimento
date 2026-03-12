@@ -244,12 +244,17 @@
 </head>
 <body>
     <header>
-        <div class="header-content">
+        <div class="header-content" style="position: relative;">
             <a href="{% url 'home' %}" class="brand">
                 <span class="logo-tag">SIA</span>
                 <span class="brand-title">Control de Asistencia</span>
             </a>
             
+            <div class="header-date" style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: 500; color: #94a3b8; white-space: nowrap;">
+                {% now "l - j/n/Y" as current_date %}
+                {{ current_date|capfirst }}
+            </div>
+
             {% if user.is_authenticated %}
             <div class="user-info">
                 <span class="user-badge">
