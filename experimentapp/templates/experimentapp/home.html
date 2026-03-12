@@ -127,13 +127,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1 class="page-title">Panel Principal</h1>
-    <p class="page-subtitle">Gestión de asistencia y consulta de agentes</p>
-</div>
-
 <div class="tabs-container">
     <a href="?view=asistencia" class="tab-button {% if current_view == 'asistencia' %}active{% endif %}">ASISTENCIA</a>
+    <a href="?view=de_licencia" class="tab-button {% if current_view == 'de_licencia' %}active{% endif %}">DE LICENCIA</a>
     <a href="?view=agentes" class="tab-button {% if current_view == 'agentes' %}active{% endif %}">AGENTES</a>
 </div>
 
@@ -265,6 +261,45 @@
                 {% else %}
                 <p style="font-size: 16px;">No se encontraron registros que coincidan con los filtros.</p>
                 {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% elif current_view == 'de_licencia' %}
+    <!-- VISTA DE LICENCIA -->
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Agentes de Licencia (Hoy)</h2>
+        </div>
+
+        <div class="table-responsive">
+            {% if licensing_agents %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Agente</th>
+                        <th>Ubicación / Área</th>
+                        <th>Fecha de Reincorporación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in licensing_agents %}
+                    <tr>
+                        <td style="font-weight: 600;">{{ item.agent.name }}</td>
+                        <td><span style="color: var(--text-muted);">{{ item.agent.location|default:"-" }}</span></td>
+                        <td>
+                            <span class="type-badge type-vacaciones" style="font-weight: 700;">
+                                {{ item.return_date|date:"d/m/Y" }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                <p style="font-size: 16px;">No hay agentes de licencia el día de hoy.</p>
             </div>
             {% endif %}
         </div>

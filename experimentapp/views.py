@@ -106,9 +106,21 @@ def home(request):
     is_admin = request.user.is_superuser
     is_editor = request.user.is_superuser or request.user.is_staff
     
+    # Lógica para "De Licencia"
+    licensing_agents = []
+    if current_view == 'de_licencia':
+        for agent in agents:
+            status = calculate_agent_status(agent)
+            if not status['available']:
+                licensing_agents.append({
+                    'agent': agent,
+                    'return_date': status['return_date']
+                })
+
     context = {
         'records': records,
         'agents': agents,
+        'licensing_agents': licensing_agents,
         'is_admin': is_admin,
         'is_editor': is_editor,
         'record_types': Record.RECORD_TYPES,
@@ -433,10 +445,7 @@ def edit_user_role(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if request.method == "POST":
         role = request.POST.get('role')
-        if role == 'admin':
-            user.is_superuser = True
-            user.is_staff = True
-        elif role == 'editor':
+        if role == 'editor':
             user.is_superuser = False
             user.is_staff = True
         else: # lector
@@ -446,6 +455,24 @@ def edit_user_role(request, user_id):
         return redirect('manage_users')
     
     return render(request, 'experimentapp/edit_user.html', {'target_user': user})
+
+@login_required(login_url='login')
+def change_password(request, user_id):
+    if not request.user.is_superuser:
+        return HttpResponse("No autorizado", status=403)
+    
+    user = get_object_or_404(User, id=user_id)
+    if request.method == "POST":
+        new_password = request.POST.get('password')
+        if new_password:
+            user.set_password(new_password)
+            user.save()
+            return redirect('manage_users')
+    
+    return render(request, 'experimentapp/edit_user.html', {
+        'target_user': user,
+        'mode': 'password'
+    })
 
 @login_required(login_url='login')
 def delete_user(request, user_id):
@@ -466,18 +493,14 @@ def add_user(request):
     
     if request.method == "POST":
         username = request.POST.get('username')
-        email = request.POST.get('email')
         password = request.POST.get('password')
         role = request.POST.get('role')
         
         if User.objects.filter(username=username).exists():
             return HttpResponse("El usuario ya existe", status=400)
             
-        user = User.objects.create_user(username=username, email=email, password=password)
-        if role == 'admin':
-            user.is_superuser = True
-            user.is_staff = True
-        elif role == 'editor':
+        user = User.objects.create_user(username=username, password=password)
+        if role == 'editor':
             user.is_staff = True
         user.save()
         return redirect('manage_users')

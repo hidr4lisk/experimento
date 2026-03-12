@@ -18,7 +18,7 @@ La aplicación está diseñada para correr en un entorno Dockerizado.
 
 ### Despliegue con Docker Compose
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 La aplicación estará disponible en `http://localhost:8000`.
 

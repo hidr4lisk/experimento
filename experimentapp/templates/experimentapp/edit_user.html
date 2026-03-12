@@ -4,21 +4,31 @@
 
 {% block content %}
 <div class="page-header">
-    <h1 class="page-title">Modificar Rol: {{ target_user.username }}</h1>
-    <p class="page-subtitle">Cambia los permisos de acceso para este usuario</p>
+    <h1 class="page-title">
+        {% if mode == 'password' %}Cambiar Contraseña: {% else %}Modificar Rol: {% endif %}{{ target_user.username }}
+    </h1>
+    <p class="page-subtitle">
+        {% if mode == 'password' %}Asigna una nueva clave de acceso{% else %}Cambia los permisos de acceso para este usuario{% endif %}
+    </p>
 </div>
 
 <div class="glass-card" style="max-width: 500px; margin: 0 auto;">
     <form method="POST">
         {% csrf_token %}
+        {% if mode == 'password' %}
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 12px; font-weight: 600;">Nueva Contraseña</label>
+            <input type="password" name="password" class="btn-secondary" style="width: 100%; text-align: left; padding: 12px;" required autofocus>
+        </div>
+        {% else %}
         <div style="margin-bottom: 25px;">
             <label style="display: block; margin-bottom: 12px; font-weight: 600;">Seleccionar Nuevo Rol</label>
             <select name="role" class="btn-secondary" style="width: 100%; padding: 12px; font-size: 15px;">
                 <option value="lector" {% if not target_user.is_staff %}selected{% endif %}>Lector (Solo vista - Como Emma/Pipo)</option>
                 <option value="editor" {% if target_user.is_staff and not target_user.is_superuser %}selected{% endif %}>Editor (Puede agregar/editar registros)</option>
-                <option value="admin" {% if target_user.is_superuser %}selected{% endif %}>Administrador (Control total + Gestión de usuarios)</option>
             </select>
         </div>
+        {% endif %}
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
             <a href="{% url 'manage_users' %}" class="btn btn-secondary">Cancelar</a>
             <button type="submit" class="btn btn-primary">Guardar Cambios</button>

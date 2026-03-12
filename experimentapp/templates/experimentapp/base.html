@@ -253,20 +253,10 @@
             {% if user.is_authenticated %}
             <div class="user-info">
                 <span class="user-badge">
-                    {% if user.is_superuser %}
-                        PANEL DE ADMINISTRADOR
-                    {% elif user.is_staff %}
-                        EDITOR DE ACCESO
-                    {% elif user.username|lower == 'emma' %}
-                        BIENVENIDA EMPERATRIZ
-                    {% elif user.username|lower == 'pipo' %}
-                        BIENVENIDO CAPITÁN
-                    {% else %}
-                        {{ user.username|upper }}
-                    {% endif %}
+                    {{ user.username|upper }}
                 </span>
                 <div style="display: flex; gap: 15px; align-items: center; margin-left: 10px;">
-                    <a href="{% url 'home' %}" style="color: white; text-decoration: none; font-size: 13px; font-weight: 500;">Resumen</a>
+                    <a href="{% url 'home' %}" style="color: white; text-decoration: none; font-size: 13px; font-weight: 500;">Asistencia</a>
                     {% if user.is_superuser %}
                     <a href="{% url 'manage_users' %}" style="color: white; text-decoration: none; font-size: 13px; font-weight: 500;">Usuarios</a>
                     {% endif %}
