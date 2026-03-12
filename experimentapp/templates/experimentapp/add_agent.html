@@ -3,8 +3,8 @@
 {% block title %}Agregar Agente - SIA{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: center;">
-    <div class="glass-card" style="max-width: 600px; width: 100%;">
+<div style="display: flex; justify-content: center; padding: 15px;">
+    <div class="glass-card" style="max-width: 600px; width: 100%; padding: 30px 20px;">
         <div class="page-header" style="text-align: center;">
             <h1 class="page-title">Nuevo Agente</h1>
             <p class="page-subtitle">Complete los datos para dar de alta un nuevo integrante</p>
@@ -27,9 +27,9 @@
                        placeholder="ej: Oficina Central / Sector X">
             </div>
             
-            <div style="display: flex; gap: 15px; margin-top: 40px;">
-                <button type="submit" class="btn btn-primary" style="flex: 2;">Guardar Agente</button>
-                <a href="{% url 'home' %}?view=agentes" class="btn btn-secondary" style="flex: 1;">Cancelar</a>
+            <div style="display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap;">
+                <button type="submit" class="btn btn-primary" style="flex: 2; min-width: 200px;">Guardar Agente</button>
+                <a href="{% url 'home' %}?view=agentes" class="btn btn-secondary" style="flex: 1; min-width: 120px;">Cancelar</a>
             </div>
         </form>
     </div>

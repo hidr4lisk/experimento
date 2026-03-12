@@ -24,8 +24,8 @@
             <tbody>
                 {% for target_user in users %}
                 <tr>
-                    <td><strong>{{ target_user.username }}</strong></td>
-                    <td>
+                    <td data-label="Usuario"><strong>{{ target_user.username }}</strong></td>
+                    <td data-label="Rol Actual">
                         {% if target_user.is_superuser %}
                             <span class="type-badge" style="background: #fee2e2; color: #b91c1c;">ADMIN</span>
                         {% elif target_user.is_staff %}
@@ -34,8 +34,8 @@
                             <span class="type-badge" style="background: #f1f5f9; color: #475569;">LECTOR</span>
                         {% endif %}
                     </td>
-                    <td style="text-align: right;">
-                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <td style="text-align: right;" class="no-label">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
                             <a href="{% url 'change_password' target_user.id %}" class="btn btn-secondary btn-sm" style="background: #e2e8f0;">Cambiar Contraseña</a>
                             {% if not target_user.is_superuser %}
                             <a href="{% url 'edit_user' target_user.id %}" class="btn btn-secondary btn-sm">Cambiar Rol</a>

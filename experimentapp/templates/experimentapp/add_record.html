@@ -3,8 +3,8 @@
 {% block title %}Agregar Registro - SIA{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: center;">
-    <div class="glass-card" style="max-width: 650px; width: 100%;">
+<div style="display: flex; justify-content: center; padding: 15px;">
+    <div class="glass-card" style="max-width: 650px; width: 100%; padding: 30px 20px;">
         <div class="page-header" style="text-align: center;">
             <h1 class="page-title">Nuevo Registro de Asistencia</h1>
             <p class="page-subtitle">Asigne una licencia o novedad a un agente</p>
@@ -60,9 +60,9 @@
                           placeholder="Ingrese detalles relevantes aquí..."></textarea>
             </div>
             
-            <div style="display: flex; gap: 15px; margin-top: 40px;">
-                <button type="submit" class="btn btn-primary" style="flex: 2;">Guardar Registro</button>
-                <a href="{% url 'home' %}" class="btn btn-secondary" style="flex: 1;">Cancelar</a>
+            <div style="display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap;">
+                <button type="submit" class="btn btn-primary" style="flex: 2; min-width: 200px;">Guardar Registro</button>
+                <a href="{% url 'home' %}" class="btn btn-secondary" style="flex: 1; min-width: 120px;">Cancelar</a>
             </div>
         </form>
     </div>
@@ -73,20 +73,20 @@ function addPeriodRow() {
     const container = document.getElementById('periods-container');
     const row = document.createElement('div');
     row.className = 'period-row';
-    row.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: flex-end; margin-bottom: 15px;';
+    row.style.cssText = 'display: flex; gap: 15px; align-items: flex-end; margin-bottom: 15px; flex-wrap: wrap;';
     
     row.innerHTML = `
-        <div>
+        <div style="flex: 1; min-width: 200px;">
             <input type="text" name="fecha_inicio[]" class="datepicker" required
                    placeholder="DD/MM/YYYY"
                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background: #f8fafc;">
         </div>
-        <div>
+        <div style="flex: 1; min-width: 200px;">
             <input type="text" name="fecha_fin[]" class="datepicker"
                    placeholder="DD/MM/YYYY"
                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background: #f8fafc;">
         </div>
-        <div>
+        <div style="width: 47px;">
             <button type="button" class="btn btn-danger" onclick="this.closest('.period-row').remove()" style="height: 47px; width: 47px; padding: 0; font-size: 20px; display: flex; align-items: center; justify-content: center;" title="Eliminar período">×</button>
         </div>
     `;

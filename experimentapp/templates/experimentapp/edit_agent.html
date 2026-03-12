@@ -3,8 +3,8 @@
 {% block title %}Editar Agente - SIA{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: center;">
-    <div class="glass-card" style="max-width: 600px; width: 100%;">
+<div style="display: flex; justify-content: center; padding: 15px;">
+    <div class="glass-card" style="max-width: 600px; width: 100%; padding: 30px 20px;">
         <div class="page-header" style="text-align: center;">
             <h1 class="page-title">Editar Agente</h1>
             <p class="page-subtitle">Modifique la información del agente seleccionado</p>
@@ -25,9 +25,9 @@
                        style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background: #f8fafc;">
             </div>
             
-            <div style="display: flex; gap: 15px; margin-top: 40px;">
-                <button type="submit" class="btn btn-primary" style="flex: 2;">Actualizar Información</button>
-                <a href="{% url 'home' %}?view=agentes" class="btn btn-secondary" style="flex: 1;">Cancelar</a>
+            <div style="display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap;">
+                <button type="submit" class="btn btn-primary" style="flex: 2; min-width: 200px;">Actualizar Información</button>
+                <a href="{% url 'home' %}?view=agentes" class="btn btn-secondary" style="flex: 1; min-width: 120px;">Cancelar</a>
             </div>
         </form>
     </div>

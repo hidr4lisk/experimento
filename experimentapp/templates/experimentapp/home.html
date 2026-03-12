@@ -28,11 +28,18 @@ background: white;
 }
 
 .tabs-container {
-display: flex;
-gap: 10px;
-margin-bottom: 30px;
-border-bottom: 2px solid var(--border-color);
-padding-bottom: 0;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.tabs-container::-webkit-scrollbar {
+    display: none;
 }
 
 .tab-button {
@@ -135,6 +142,28 @@ opacity: 0.5;
 color: var(--primary);
 opacity: 1;
 }
+
+@media (max-width: 768px) {
+    .filters form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filters div {
+        width: 100% !important;
+    }
+    .filters button, .filters a {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .tabs-container {
+        padding: 0 5px;
+    }
+    .tab-button {
+        padding: 10px 20px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+}
 {% endblock %}
 
 {% block content %}
@@ -161,9 +190,9 @@ opacity: 1;
     <div class="filters">
         <form method="GET">
             <input type="hidden" name="view" value="asistencia">
-            <div style="display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 200px;">
                 <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Agente</label>
-                <select name="agent" onchange="this.form.submit()">
+                <select name="agent" onchange="this.form.submit()" style="width: 100%;">
                     <option value="" {% if 'agent' not in request.GET %}selected{% endif %} disabled>Seleccione un Agente</option>
                     <option value="all" {% if request.GET.agent == 'all' %}selected{% endif %}>Todos los Agentes</option>
                     {% for agent in agents %}
@@ -174,9 +203,9 @@ opacity: 1;
                 </select>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; flex-direction: column; gap: 5px; width: 180px;">
                 <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Licencia</label>
-                <select name="type" onchange="this.form.submit()">
+                <select name="type" onchange="this.form.submit()" style="width: 100%;">
                     <option value="">Todos los tipos</option>
                     {% for value, label in record_types %}
                     <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
@@ -186,13 +215,13 @@ opacity: 1;
                 </select>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 250px;">
+            <div style="display: flex; flex-direction: column; gap: 5px; flex: 2; min-width: 250px;">
                 <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Búsqueda por texto</label>
                 <input type="text" name="search" placeholder="Nombre, nota o ubicación..."
-                    value="{{ request.GET.search|default:'' }}">
+                    value="{{ request.GET.search|default:'' }}" style="width: 100%;">
             </div>
 
-            <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
                 <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">Buscar</button>
                 <a href="?view=asistencia" class="btn btn-secondary">Limpiar</a>
                 {% if is_editor %}
@@ -255,18 +284,18 @@ opacity: 1;
             <tbody>
                 {% for record in records %}
                 <tr>
-                    <td style="text-align: center;">
+                    <td style="text-align: center;" class="no-label">
                         <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar"
                             title="Ver Calendario">📅</a>
                     </td>
-                    <td><strong>{{ record.agent.name }}</strong></td>
-                    <td><span style="font-size: 13px; color: var(--text-muted);">{{ record.agent.location|default:"-" }}</span></td>
-                    <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
-                    <td style="font-weight: 500;">{{ record.fecha_inicio|date:"d/m/y" }}</td>
-                    <td style="font-weight: 500;">{{ record.fecha_fin|date:"d/m/y" }}</td>
-                    <td style="color: var(--text-muted); font-size: 13px;">{{ record.notes|truncatewords:10 }}</td>
+                    <td data-label="Agente"><strong>{{ record.agent.name }}</strong></td>
+                    <td data-label="Ubicación"><span style="font-size: 13px; color: var(--text-muted);">{{ record.agent.location|default:"-" }}</span></td>
+                    <td data-label="Licencia"><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
+                    <td data-label="Inicio" style="font-weight: 500;">{{ record.fecha_inicio|date:"d/m/y" }}</td>
+                    <td data-label="Fin" style="font-weight: 500;">{{ record.fecha_fin|date:"d/m/y" }}</td>
+                    <td data-label="Notas" style="color: var(--text-muted); font-size: 13px;">{{ record.notes|truncatewords:10 }}</td>
                     {% if is_editor %}
-                    <td style="text-align: right;">
+                    <td style="text-align: right;" class="no-label">
                         <div style="display: flex; gap: 8px; justify-content: flex-end;">
                             <a href="{% url 'edit_record' record.id %}" class="btn btn-secondary btn-sm">Editar</a>
                             <a href="{% url 'delete_record' record.id %}" class="btn btn-danger btn-sm"
@@ -311,12 +340,12 @@ opacity: 1;
             <tbody>
                 {% for item in licensing_agents %}
                 <tr>
-                    <td style="text-align: center;">
+                    <td style="text-align: center;" class="no-label">
                         <a href="{% url 'agent_calendar' item.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
                     </td>
-                    <td style="font-weight: 600;">{{ item.agent.name }}</td>
-                    <td><span style="color: var(--text-muted);">{{ item.agent.location|default:"-" }}</span></td>
-                    <td>
+                    <td data-label="Agente" style="font-weight: 600;">{{ item.agent.name }}</td>
+                    <td data-label="Ubicación"><span style="color: var(--text-muted);">{{ item.agent.location|default:"-" }}</span></td>
+                    <td data-label="Reintegra">
                         <span class="type-badge type-vacaciones" style="font-weight: 700;">
                             {{ item.return_date|date:"d/m/Y" }}
                         </span>
@@ -388,20 +417,20 @@ opacity: 1;
             <tbody>
                 {% for agent in agents %}
                 <tr class="agent-row">
-                    <td style="text-align: center;">
+                    <td style="text-align: center;" class="no-label">
                         <a href="{% url 'agent_calendar' agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
                     </td>
-                    <td style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
-                    <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
-                    <td>
+                    <td data-label="Agente" style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
+                    <td data-label="Ubicación"><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
+                    <td data-label="Estado">
                         {% if agent.status.available %}
                             <span class="status-badge status-available">DISPONIBLE</span>
                         {% else %}
                             <span class="status-badge status-away">REINTEGRA: {{ agent.status.return_date|date:"d/m" }}</span>
                         {% endif %}
                     </td>
-                    <td style="text-align: right;">
-                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <td style="text-align: right;" class="no-label">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
                             <a href="{% url 'export_agent_report' agent.id %}" class="btn btn-secondary btn-sm"
                                 style="background: #dbeafe; color: #1e40af;">Reporte</a>
                             {% if is_editor %}
