@@ -310,26 +310,15 @@ def agent_calendar_data(request, agent_id):
     
     # Agregar feriados al calendario
     for date, name in ar_holidays.items():
-        if date.weekday() < 5:  # Solo feriados en días hábiles (opcional, pero consistente con el resto)
-            events.append({
-                'title': f'Feriado: {name}',
-                'start': date.strftime('%Y-%m-%d'),
-                'backgroundColor': '#e2e8f0',
-                'borderColor': '#cbd5e0',
-                'textColor': '#4a5568',
-                'allDay': True,
-                'display': 'background', # Opcional: mostrar como fondo
-            })
-        else:
-            # Si es fin de semana, igual lo agregamos pero quizás con otro estilo o solo el título
-            events.append({
-                'title': f'Feriado: {name}',
-                'start': date.strftime('%Y-%m-%d'),
-                'backgroundColor': '#e2e8f0',
-                'borderColor': '#cbd5e0',
-                'textColor': '#4a5568',
-                'allDay': True,
-            })
+        # Usamos display: 'background' para que solo se vea el color gris sin texto
+        # Esto evita que las efemérides sobresalgan de la celda en móviles.
+        events.append({
+            'start': date.strftime('%Y-%m-%d'),
+            'backgroundColor': '#e2e8f0',
+            'borderColor': '#cbd5e0',
+            'display': 'background',
+            'allDay': True,
+        })
 
     # Agregar eventos de los registros (días que no vino)
     for record in records:

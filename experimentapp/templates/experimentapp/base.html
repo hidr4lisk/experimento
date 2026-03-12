@@ -149,22 +149,27 @@
             .table-responsive {
                 border: none;
             }
-            table, thead, tbody, th, td, tr {
+            .table-responsive table, 
+            .table-responsive thead, 
+            .table-responsive tbody, 
+            .table-responsive th, 
+            .table-responsive td, 
+            .table-responsive tr {
                 display: block;
             }
-            thead tr {
+            .table-responsive thead tr {
                 position: absolute;
                 top: -9999px;
                 left: -9999px;
             }
-            tr {
+            .table-responsive tr {
                 border: 1px solid var(--border-color);
                 border-radius: 12px;
                 margin-bottom: 15px;
                 background: white;
                 overflow: hidden;
             }
-            td {
+            .table-responsive td {
                 border: none;
                 border-bottom: 1px solid #f1f5f9;
                 position: relative;
@@ -172,10 +177,10 @@
                 text-align: right !important;
                 min-height: 45px;
             }
-            td:last-child {
+            .table-responsive td:last-child {
                 border-bottom: none;
             }
-            td:before {
+            .table-responsive td:before {
                 position: absolute;
                 top: 50%;
                 left: 15px;
@@ -192,11 +197,11 @@
             }
             
             /* Special handling for columns without labels or centered content */
-            td.no-label {
+            .table-responsive td.no-label {
                 padding-left: 15px !important;
                 text-align: center !important;
             }
-            td.no-label:before {
+            .table-responsive td.no-label:before {
                 display: none;
             }
             
