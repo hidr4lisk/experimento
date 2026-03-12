@@ -386,7 +386,7 @@ opacity: 1;
         <h2 style="font-size: 20px; color: #0f172a; font-weight: 700; flex-shrink: 0; margin: 0;">Personal de la Gerencia</h2>
 
         <div style="flex-grow: 1; position: relative; max-width: 400px;">
-            <input type="text" id="agentSearch" placeholder="🔍 Buscar agente por nombre..."
+            <input type="text" id="agentSearch" placeholder="🔍 Buscar por nombre o ubicación..."
                 style="width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; outline: none; transition: border-color 0.2s;"
                 onkeyup="filterAgents()">
         </div>
@@ -438,7 +438,7 @@ opacity: 1;
                         <a href="{% url 'agent_calendar' agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
                     </td>
                     <td data-label="Agente" style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
-                    <td data-label="Ubicación"><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
+                    <td data-label="Ubicación" class="agent-location"><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
                     <td data-label="Estado">
                         {% if agent.status.available %}
                             <span class="status-badge status-available">DISPONIBLE</span>
@@ -473,13 +473,19 @@ opacity: 1;
 
         for (let i = 0; i < rows.length; i++) {
             const nameCell = rows[i].getElementsByClassName('agent-name')[0];
-            if (nameCell) {
-                const nameText = nameCell.textContent || nameCell.innerText;
-                if (nameText.toLowerCase().indexOf(filter) > -1) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
+            const locationCell = rows[i].getElementsByClassName('agent-location')[0];
+            
+            let nameText = "";
+            let locationText = "";
+            
+            if (nameCell) nameText = nameCell.textContent || nameCell.innerText;
+            if (locationCell) locationText = locationCell.textContent || locationCell.innerText;
+            
+            if (nameText.toLowerCase().indexOf(filter) > -1 || 
+                locationText.toLowerCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
             }
         }
     }
