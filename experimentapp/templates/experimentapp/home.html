@@ -249,10 +249,8 @@ opacity: 1;
                             title="Ver Calendario">📅</a>
                     </td>
                     <td><strong>{{ record.agent.name }}</strong></td>
-                    <td><span style="font-size: 13px; color: var(--text-muted);">{{ record.agent.location|default:"-"
-                            }}</span></td>
-                    <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display
-                            }}</span></td>
+                    <td><span style="font-size: 13px; color: var(--text-muted);">{{ record.agent.location|default:"-" }}</span></td>
+                    <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
                     <td style="font-weight: 500;">{{ record.fecha_inicio|date:"d/m/y" }}</td>
                     <td style="font-weight: 500;">{{ record.fecha_fin|date:"d/m/y" }}</td>
                     <td style="color: var(--text-muted); font-size: 13px;">{{ record.notes|truncatewords:10 }}</td>
