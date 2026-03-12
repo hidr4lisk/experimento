@@ -164,6 +164,21 @@ opacity: 1;
         font-size: 13px;
         white-space: nowrap;
     }
+    .view-header {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    .view-header > div, .view-header > h2 {
+        width: 100%;
+        max-width: none !important;
+    }
+    .view-header .button-group {
+        flex-direction: column;
+    }
+    .view-header .button-group a {
+        width: 100%;
+        text-align: center;
+    }
 }
 </style>
 {% endblock %}
@@ -324,8 +339,8 @@ opacity: 1;
 {% elif current_view == 'de_licencia' %}
 <!-- VISTA DE LICENCIA -->
 <div class="glass-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-        <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Agentes de Licencia</h2>
+    <div class="view-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap;">
+        <h2 style="font-size: 20px; color: #0f172a; font-weight: 700; margin: 0;">Agentes de Licencia</h2>
     </div>
 
     <div class="table-responsive">
@@ -367,8 +382,8 @@ opacity: 1;
 {% else %}
 <!-- VISTA AGENTES -->
 <div class="glass-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px;">
-        <h2 style="font-size: 20px; color: #0f172a; font-weight: 700; flex-shrink: 0;">Personal de la Gerencia</h2>
+    <div class="view-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; flex-wrap: wrap;">
+        <h2 style="font-size: 20px; color: #0f172a; font-weight: 700; flex-shrink: 0; margin: 0;">Personal de la Gerencia</h2>
 
         <div style="flex-grow: 1; position: relative; max-width: 400px;">
             <input type="text" id="agentSearch" placeholder="🔍 Buscar agente por nombre..."
@@ -376,7 +391,7 @@ opacity: 1;
                 onkeyup="filterAgents()">
         </div>
 
-        <div style="display: flex; gap: 10px; flex-shrink: 0;">
+        <div class="button-group" style="display: flex; gap: 10px; flex-shrink: 0;">
             <a href="{% url 'export_full_report' %}" class="btn btn-secondary" style="background: #dbeafe; color: #1e40af;">
                 📊 Reporte Completo
             </a>
