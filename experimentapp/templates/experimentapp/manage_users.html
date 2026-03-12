@@ -37,7 +37,9 @@
                     <td style="text-align: right;">
                         <div style="display: flex; gap: 8px; justify-content: flex-end;">
                             <a href="{% url 'change_password' target_user.id %}" class="btn btn-secondary btn-sm" style="background: #e2e8f0;">Cambiar Contraseña</a>
+                            {% if not target_user.is_superuser %}
                             <a href="{% url 'edit_user' target_user.id %}" class="btn btn-secondary btn-sm">Cambiar Rol</a>
+                            {% endif %}
                             {% if target_user.id != request.user.id %}
                             <a href="{% url 'delete_user' target_user.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro quieres eliminar a {{ target_user.username }}?')">Eliminar</a>
                             {% endif %}

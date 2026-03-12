@@ -74,9 +74,7 @@ def export_agent_report(request, agent_id):
 
 @login_required(login_url='login')
 def export_full_report(request):
-    if not (request.user.is_superuser or request.user.is_staff):
-        return HttpResponse("No autorizado", status=403)
-        
+    # Ya no se requiere is_superuser o is_staff, solo estar logueado
     records = Record.objects.all().order_by('agent__name', 'fecha_inicio')
     
     # Crear libro de Excel
@@ -577,6 +575,11 @@ def edit_user_role(request, user_id):
         return HttpResponse("No autorizado", status=403)
     
     user = get_object_or_404(User, id=user_id)
+    
+    # Prevenir cambio de rol de administradores (superusers)
+    if user.is_superuser:
+        return redirect('manage_users')
+        
     if request.method == "POST":
         role = request.POST.get('role')
         if role == 'editor':

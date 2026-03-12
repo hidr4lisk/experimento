@@ -345,16 +345,16 @@ opacity: 1;
                 onkeyup="filterAgents()">
         </div>
 
-        {% if is_editor %}
         <div style="display: flex; gap: 10px; flex-shrink: 0;">
             <a href="{% url 'export_full_report' %}" class="btn btn-secondary" style="background: #dbeafe; color: #1e40af;">
                 📊 Reporte Completo
             </a>
+            {% if is_editor %}
             <a href="{% url 'add_agent' %}" class="btn btn-primary">
                 <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
             </a>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
 
     <div class="table-responsive">
@@ -400,17 +400,17 @@ opacity: 1;
                             <span class="status-badge status-away">REINTEGRA: {{ agent.status.return_date|date:"d/m" }}</span>
                         {% endif %}
                     </td>
-                    {% if is_editor %}
                     <td style="text-align: right;">
                         <div style="display: flex; gap: 8px; justify-content: flex-end;">
                             <a href="{% url 'export_agent_report' agent.id %}" class="btn btn-secondary btn-sm"
                                 style="background: #dbeafe; color: #1e40af;">Reporte</a>
+                            {% if is_editor %}
                             <a href="{% url 'edit_agent' agent.id %}" class="btn btn-secondary btn-sm">Editar</a>
                             <a href="{% url 'delete_agent' agent.id %}" class="btn btn-danger btn-sm"
                                 onclick="return confirm('¿Estás seguro de que deseas eliminar este agente y todos sus registros?')">Eliminar</a>
+                            {% endif %}
                         </div>
                     </td>
-                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
