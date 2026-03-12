@@ -3,390 +3,417 @@
 {% block title %}Inicio - SIA Control de Asistencia{% endblock %}
 
 {% block extra_css %}
-    /* Custom styles for home page tabs and filters */
-    .filters {
-        background: #f8fafc;
-        padding: 20px;
-        border-radius: 12px;
-        border: 1px solid var(--border-color);
-        margin-bottom: 25px;
-    }
+/* Custom styles for home page tabs and filters */
+.filters {
+background: #f8fafc;
+padding: 20px;
+border-radius: 12px;
+border: 1px solid var(--border-color);
+margin-bottom: 25px;
+}
 
-    .filters form {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        align-items: flex-end;
-    }
+.filters form {
+display: flex;
+gap: 15px;
+flex-wrap: wrap;
+align-items: flex-end;
+}
 
-    .filters select, .filters input {
-        padding: 10px 15px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        font-size: 14px;
-        background: white;
-    }
+.filters select, .filters input {
+padding: 10px 15px;
+border: 1px solid var(--border-color);
+border-radius: 8px;
+font-size: 14px;
+background: white;
+}
 
-    .tabs-container {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 30px;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 0;
-    }
+.tabs-container {
+display: flex;
+gap: 10px;
+margin-bottom: 30px;
+border-bottom: 2px solid var(--border-color);
+padding-bottom: 0;
+}
 
-    .tab-button {
-        padding: 14px 40px;
-        font-size: 15px;
-        font-weight: 700;
-        border: none;
-        background: none;
-        cursor: pointer;
-        color: var(--text-muted);
-        transition: all 0.3s;
-        text-decoration: none;
-        border-radius: 8px 8px 0 0;
-        margin-bottom: -2px;
-        border-bottom: 2px solid transparent;
-    }
+.tab-button {
+padding: 14px 40px;
+font-size: 15px;
+font-weight: 700;
+border: none;
+background: none;
+cursor: pointer;
+color: var(--text-muted);
+transition: all 0.3s;
+text-decoration: none;
+border-radius: 8px 8px 0 0;
+margin-bottom: -2px;
+border-bottom: 2px solid transparent;
+}
 
-    .tab-button:hover {
-        color: var(--primary);
-        background: rgba(37, 99, 235, 0.05);
-    }
+.tab-button:hover {
+color: var(--primary);
+background: rgba(37, 99, 235, 0.05);
+}
 
-    .tab-button.active {
-        color: var(--primary);
-        border-bottom-color: var(--primary);
-        background: rgba(37, 99, 235, 0.05);
-    }
+.tab-button.active {
+color: var(--primary);
+border-bottom-color: var(--primary);
+background: rgba(37, 99, 235, 0.05);
+}
 
-    .btn-calendar {
-        font-size: 18px;
-        text-decoration: none;
-        transition: transform 0.2s;
-        display: inline-block;
-    }
-    .btn-calendar:hover {
-        transform: scale(1.2);
-    }
+.btn-calendar {
+font-size: 18px;
+text-decoration: none;
+transition: transform 0.2s;
+display: inline-block;
+}
+.btn-calendar:hover {
+transform: scale(1.2);
+}
 
-    .type-badge {
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-    }
+.type-badge {
+padding: 4px 10px;
+border-radius: 6px;
+font-size: 12px;
+font-weight: 700;
+text-transform: uppercase;
+}
 
-    .type-badge.type-vacaciones { background: #fef9c3 !important; color: #854d0e !important; }
-    .type-badge.type-comision { background: #dbeafe !important; color: #1e40af !important; }
-    .type-badge.type-franquicia { background: #f3e8ff !important; color: #6b21a8 !important; }
-    .type-badge.type-razon_particular { background: #ffedd5 !important; color: #9a3412 !important; }
-    .type-badge.type-otro { background: #f1f5f9 !important; color: #475569 !important; }
+.type-badge.type-vacaciones { background: #fef9c3 !important; color: #854d0e !important; }
+.type-badge.type-comision { background: #dbeafe !important; color: #1e40af !important; }
+.type-badge.type-franquicia { background: #f3e8ff !important; color: #6b21a8 !important; }
+.type-badge.type-razon_particular { background: #ffedd5 !important; color: #9a3412 !important; }
+.type-badge.type-otro { background: #f1f5f9 !important; color: #475569 !important; }
 
-    .btn-sm {
-        padding: 6px 12px;
-        font-size: 12px;
-        border-radius: 6px;
-    }
+.btn-sm {
+padding: 6px 12px;
+font-size: 12px;
+border-radius: 6px;
+}
 
-    .actions {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: flex-end;
-    }
+.actions {
+margin-bottom: 20px;
+display: flex;
+justify-content: flex-end;
+}
 
-    /* Column Sorting Arrows */
-    .sort-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        text-decoration: none;
-        color: inherit;
-        transition: color 0.2s;
-    }
+/* Column Sorting Arrows */
+.sort-link {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+text-decoration: none;
+color: inherit;
+transition: color 0.2s;
+}
 
-    .sort-link:hover {
-        color: var(--primary);
-    }
+.sort-link:hover {
+color: var(--primary);
+}
 
-    .sort-arrow {
-        font-size: 10px;
-        color: #94a3b8;
-        display: flex;
-        flex-direction: column;
-        line-height: 0.6;
-        opacity: 0.5;
-    }
+.sort-arrow {
+font-size: 10px;
+color: #94a3b8;
+display: flex;
+flex-direction: column;
+line-height: 0.6;
+opacity: 0.5;
+}
 
-    .sort-arrow.active {
-        color: var(--primary);
-        opacity: 1;
-    }
+.sort-arrow.active {
+color: var(--primary);
+opacity: 1;
+}
 {% endblock %}
 
 {% block content %}
 <div class="tabs-container">
     <a href="?view=asistencia" class="tab-button {% if current_view == 'asistencia' %}active{% endif %}">ASISTENCIA</a>
-    <a href="?view=de_licencia" class="tab-button {% if current_view == 'de_licencia' %}active{% endif %}">DE LICENCIA</a>
+    <a href="?view=de_licencia" class="tab-button {% if current_view == 'de_licencia' %}active{% endif %}">DE
+        LICENCIA</a>
     <a href="?view=agentes" class="tab-button {% if current_view == 'agentes' %}active{% endif %}">AGENTES</a>
 </div>
 
 {% if current_view == 'asistencia' %}
-    <!-- VISTA ASISTENCIA -->
-    <div class="glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 20px;">
-            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Registros de Asistencia</h2>
-            {% if is_editor %}
-            <a href="{% url 'add_record' %}" class="btn btn-primary">
-                <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Registro
-            </a>
-            {% endif %}
-        </div>
+<!-- VISTA ASISTENCIA -->
+<div class="glass-card">
+    <div
+        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 20px;">
+        <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Registros de Asistencia</h2>
+        {% if is_editor %}
+        <a href="{% url 'add_record' %}" class="btn btn-primary">
+            <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Registro
+        </a>
+        {% endif %}
+    </div>
 
-        <div class="filters">
-            <form method="GET">
-                <input type="hidden" name="view" value="asistencia">
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Agente</label>
-                    <select name="agent" onchange="this.form.submit()">
-                        <option value="" {% if 'agent' not in request.GET %}selected{% endif %} disabled>Seleccione un Agente</option>
-                        <option value="all" {% if request.GET.agent == 'all' %}selected{% endif %}>Todos los Agentes</option>
-                        {% for agent in agents %}
-                        <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>
-                            {{ agent.name }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Licencia</label>
-                    <select name="type" onchange="this.form.submit()">
-                        <option value="">Todos los tipos</option>
-                        {% for value, label in record_types %}
-                        <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
-                            {{ label }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div style="display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 250px;">
-                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Búsqueda por texto</label>
-                    <input type="text" name="search" placeholder="Nombre, nota o ubicación..." value="{{ request.GET.search|default:'' }}">
-                </div>
-                
-                <div style="display: flex; gap: 10px; align-items: flex-end;">
-                    <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">Buscar</button>
-                    <a href="?view=asistencia" class="btn btn-secondary">Limpiar</a>
-                    {% if is_editor %}
-                    <a href="?view=asistencia&duplicates=true" class="btn {% if request.GET.duplicates == 'true' %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 10px 20px;">Duplicados</a>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-
-        <div class="table-responsive">
-            {% if records %}
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 60px; text-align: center;">Cal.</th>
-                        <th>
-                            <a href="?view=asistencia&sort={% if request.GET.sort == 'agent__name' %}-agent__name{% else %}agent__name{% endif %}" class="sort-link">
-                                Agente
-                                <span class="sort-arrow {% if 'agent__name' in request.GET.sort %}active{% endif %}">
-                                    {% if request.GET.sort == 'agent__name' %}▲{% elif request.GET.sort == '-agent__name' %}▼{% else %}⇅{% endif %}
-                                </span>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?view=asistencia&sort={% if request.GET.sort == 'agent__location' %}-agent__location{% else %}agent__location{% endif %}" class="sort-link">
-                                Ubicación
-                                <span class="sort-arrow {% if 'agent__location' in request.GET.sort %}active{% endif %}">
-                                    {% if request.GET.sort == 'agent__location' %}▲{% elif request.GET.sort == '-agent__location' %}▼{% else %}⇅{% endif %}
-                                </span>
-                            </a>
-                        </th>
-                        <th>Licencia</th>
-                        <th>
-                            <a href="?view=asistencia&sort={% if request.GET.sort == 'fecha_inicio' %}-fecha_inicio{% else %}fecha_inicio{% endif %}" class="sort-link">
-                                Inicio
-                                <span class="sort-arrow {% if 'fecha_inicio' in request.GET.sort or not request.GET.sort %}active{% endif %}">
-                                    {% if request.GET.sort == 'fecha_inicio' %}▲{% elif request.GET.sort == '-fecha_inicio' or not request.GET.sort %}▼{% else %}⇅{% endif %}
-                                </span>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?view=asistencia&sort={% if request.GET.sort == 'fecha_fin' %}-fecha_fin{% else %}fecha_fin{% endif %}" class="sort-link">
-                                Fin
-                                <span class="sort-arrow {% if 'fecha_fin' in request.GET.sort %}active{% endif %}">
-                                    {% if request.GET.sort == 'fecha_fin' %}▲{% elif request.GET.sort == '-fecha_fin' %}▼{% else %}⇅{% endif %}
-                                </span>
-                            </a>
-                        </th>
-                        <th>Notas</th>
-                        {% if is_editor %}<th style="text-align: right;">Acciones</th>{% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for record in records %}
-                    <tr>
-                        <td style="text-align: center;">
-                            <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
-                        </td>
-                        <td><strong>{{ record.agent.name }}</strong></td>
-                        <td><span style="font-size: 13px; color: var(--text-muted);">{{ record.agent.location|default:"-" }}</span></td>
-                        <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display }}</span></td>
-                        <td style="font-weight: 500;">{{ record.fecha_inicio|date:"d/m/y" }}</td>
-                        <td style="font-weight: 500;">{{ record.fecha_fin|date:"d/m/y" }}</td>
-                        <td style="color: var(--text-muted); font-size: 13px;">{{ record.notes|truncatewords:10 }}</td>
-                        {% if is_editor %}
-                        <td style="text-align: right;">
-                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                                <a href="{% url 'edit_record' record.id %}" class="btn btn-secondary btn-sm">Editar</a>
-                                <a href="{% url 'delete_record' record.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</a>
-                            </div>
-                        </td>
-                        {% endif %}
-                    </tr>
+    <div class="filters">
+        <form method="GET">
+            <input type="hidden" name="view" value="asistencia">
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Agente</label>
+                <select name="agent" onchange="this.form.submit()">
+                    <option value="" {% if 'agent' not in request.GET %}selected{% endif %} disabled>Seleccione un
+                        Agente</option>
+                    <option value="all" {% if request.GET.agent=='all' %}selected{% endif %}>Todos los Agentes</option>
+                    {% for agent in agents %}
+                    <option value="{{ agent.id }}" {% if request.GET.agent==agent.id|stringformat:"s" %}selected{% endif
+                        %}>
+                        {{ agent.name }}
+                    </option>
                     {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
-                {% if not has_filter %}
-                <p style="font-size: 16px;">Seleccione un filtro para ver los registros de asistencia.</p>
-                {% else %}
-                <p style="font-size: 16px;">No se encontraron registros que coincidan con los filtros.</p>
+                </select>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Licencia</label>
+                <select name="type" onchange="this.form.submit()">
+                    <option value="">Todos los tipos</option>
+                    {% for value, label in record_types %}
+                    <option value="{{ value }}" {% if request.GET.type==value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 250px;">
+                <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Búsqueda por texto</label>
+                <input type="text" name="search" placeholder="Nombre, nota o ubicación..."
+                    value="{{ request.GET.search|default:'' }}">
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">Buscar</button>
+                <a href="?view=asistencia" class="btn btn-secondary">Limpiar</a>
+                {% if is_editor %}
+                <a href="?view=asistencia&duplicates=true"
+                    class="btn {% if request.GET.duplicates == 'true' %}btn-primary{% else %}btn-secondary{% endif %}"
+                    style="padding: 10px 20px;">Duplicados</a>
                 {% endif %}
             </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        {% if records %}
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 60px; text-align: center;">Cal.</th>
+                    <th>
+                        <a href="?view=asistencia&sort={% if request.GET.sort == 'agent__name' %}-agent__name{% else %}agent__name{% endif %}"
+                            class="sort-link">
+                            Agente
+                            <span class="sort-arrow {% if 'agent__name' in request.GET.sort %}active{% endif %}">
+                                {% if request.GET.sort == 'agent__name' %}▲{% elif request.GET.sort == '-agent__name'
+                                %}▼{% else %}⇅{% endif %}
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="?view=asistencia&sort={% if request.GET.sort == 'agent__location' %}-agent__location{% else %}agent__location{% endif %}"
+                            class="sort-link">
+                            Ubicación
+                            <span class="sort-arrow {% if 'agent__location' in request.GET.sort %}active{% endif %}">
+                                {% if request.GET.sort == 'agent__location' %}▲{% elif request.GET.sort ==
+                                '-agent__location' %}▼{% else %}⇅{% endif %}
+                            </span>
+                        </a>
+                    </th>
+                    <th>Licencia</th>
+                    <th>
+                        <a href="?view=asistencia&sort={% if request.GET.sort == 'fecha_inicio' %}-fecha_inicio{% else %}fecha_inicio{% endif %}"
+                            class="sort-link">
+                            Inicio
+                            <span
+                                class="sort-arrow {% if 'fecha_inicio' in request.GET.sort or not request.GET.sort %}active{% endif %}">
+                                {% if request.GET.sort == 'fecha_inicio' %}▲{% elif request.GET.sort == '-fecha_inicio'
+                                or not request.GET.sort %}▼{% else %}⇅{% endif %}
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="?view=asistencia&sort={% if request.GET.sort == 'fecha_fin' %}-fecha_fin{% else %}fecha_fin{% endif %}"
+                            class="sort-link">
+                            Fin
+                            <span class="sort-arrow {% if 'fecha_fin' in request.GET.sort %}active{% endif %}">
+                                {% if request.GET.sort == 'fecha_fin' %}▲{% elif request.GET.sort == '-fecha_fin' %}▼{%
+                                else %}⇅{% endif %}
+                            </span>
+                        </a>
+                    </th>
+                    <th>Notas</th>
+                    {% if is_editor %}<th style="text-align: right;">Acciones</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td style="text-align: center;">
+                        <a href="{% url 'agent_calendar' record.agent.id %}" class="btn-calendar"
+                            title="Ver Calendario">📅</a>
+                    </td>
+                    <td><strong>{{ record.agent.name }}</strong></td>
+                    <td><span style="font-size: 13px; color: var(--text-muted);">{{ record.agent.location|default:"-"
+                            }}</span></td>
+                    <td><span class="type-badge type-{{ record.record_type }}">{{ record.get_record_type_display
+                            }}</span></td>
+                    <td style="font-weight: 500;">{{ record.fecha_inicio|date:"d/m/y" }}</td>
+                    <td style="font-weight: 500;">{{ record.fecha_fin|date:"d/m/y" }}</td>
+                    <td style="color: var(--text-muted); font-size: 13px;">{{ record.notes|truncatewords:10 }}</td>
+                    {% if is_editor %}
+                    <td style="text-align: right;">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                            <a href="{% url 'edit_record' record.id %}" class="btn btn-secondary btn-sm">Editar</a>
+                            <a href="{% url 'delete_record' record.id %}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            {% if not has_filter %}
+            <p style="font-size: 16px;">Seleccione un filtro para ver los registros de asistencia.</p>
+            {% else %}
+            <p style="font-size: 16px;">No se encontraron registros que coincidan con los filtros.</p>
             {% endif %}
         </div>
+        {% endif %}
     </div>
+</div>
 
 {% elif current_view == 'de_licencia' %}
-    <!-- VISTA DE LICENCIA -->
-    <div class="glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Agentes de Licencia (Hoy)</h2>
-        </div>
-
-        <div class="table-responsive">
-            {% if licensing_agents %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Agente</th>
-                        <th>Ubicación / Área</th>
-                        <th>Fecha de Reincorporación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in licensing_agents %}
-                    <tr>
-                        <td style="font-weight: 600;">{{ item.agent.name }}</td>
-                        <td><span style="color: var(--text-muted);">{{ item.agent.location|default:"-" }}</span></td>
-                        <td>
-                            <span class="type-badge type-vacaciones" style="font-weight: 700;">
-                                {{ item.return_date|date:"d/m/Y" }}
-                            </span>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
-                <p style="font-size: 16px;">No hay agentes de licencia el día de hoy.</p>
-            </div>
-            {% endif %}
-        </div>
+<!-- VISTA DE LICENCIA -->
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Agentes de Licencia</h2>
     </div>
+
+    <div class="table-responsive">
+        {% if licensing_agents %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Agente</th>
+                    <th>Ubicación / Área</th>
+                    <th>Fecha de Reincorporación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in licensing_agents %}
+                <tr>
+                    <td style="font-weight: 600;">{{ item.agent.name }}</td>
+                    <td><span style="color: var(--text-muted);">{{ item.agent.location|default:"-" }}</span></td>
+                    <td>
+                        <span class="type-badge type-vacaciones" style="font-weight: 700;">
+                            {{ item.return_date|date:"d/m/Y" }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            <p style="font-size: 16px;">No hay agentes de licencia el día de hoy.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
 
 {% else %}
-    <!-- VISTA AGENTES -->
-    <div class="glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px;">
-            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700; flex-shrink: 0;">Personal de la Gerencia</h2>
-            
-            <div style="flex-grow: 1; position: relative; max-width: 400px;">
-                <input type="text" id="agentSearch" placeholder="🔍 Buscar agente por nombre..." 
-                       style="width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; outline: none; transition: border-color 0.2s;"
-                       onkeyup="filterAgents()">
-            </div>
+<!-- VISTA AGENTES -->
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px;">
+        <h2 style="font-size: 20px; color: #0f172a; font-weight: 700; flex-shrink: 0;">Personal de la Gerencia</h2>
 
-            {% if is_editor %}
-            <a href="{% url 'add_agent' %}" class="btn btn-primary" style="flex-shrink: 0;">
-                <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
-            </a>
-            {% endif %}
+        <div style="flex-grow: 1; position: relative; max-width: 400px;">
+            <input type="text" id="agentSearch" placeholder="🔍 Buscar agente por nombre..."
+                style="width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; outline: none; transition: border-color 0.2s;"
+                onkeyup="filterAgents()">
         </div>
 
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            <a href="?view=agentes&sort={% if request.GET.sort == 'name' %}-name{% else %}name{% endif %}" class="sort-link">
-                                Nombre del Agente
-                                <span class="sort-arrow {% if 'name' in request.GET.sort or not request.GET.sort and current_view == 'agentes' %}active{% endif %}">
-                                    {% if request.GET.sort == 'name' or not request.GET.sort and current_view == 'agentes' %}▲{% elif request.GET.sort == '-name' %}▼{% else %}⇅{% endif %}
-                                </span>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?view=agentes&sort={% if request.GET.sort == 'location' %}-location{% else %}location{% endif %}" class="sort-link">
-                                Ubicación / Área
-                                <span class="sort-arrow {% if 'location' in request.GET.sort %}active{% endif %}">
-                                    {% if request.GET.sort == 'location' %}▲{% elif request.GET.sort == '-location' %}▼{% else %}⇅{% endif %}
-                                </span>
-                            </a>
-                        </th>
-                        {% if is_editor %}<th style="text-align: right;">Acciones</th>{% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for agent in agents %}
-                    <tr class="agent-row">
-                        <td style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
-                        <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
-                        {% if is_editor %}
-                        <td style="text-align: right;">
-                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                                <a href="{% url 'export_agent_report' agent.id %}" class="btn btn-secondary btn-sm" style="background: #dbeafe; color: #1e40af;">Reporte</a>
-                                <a href="{% url 'edit_agent' agent.id %}" class="btn btn-secondary btn-sm">Editar</a>
-                                <a href="{% url 'delete_agent' agent.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este agente y todos sus registros?')">Eliminar</a>
-                            </div>
-                        </td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        {% if is_editor %}
+        <a href="{% url 'add_agent' %}" class="btn btn-primary" style="flex-shrink: 0;">
+            <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
+        </a>
+        {% endif %}
     </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        <a href="?view=agentes&sort={% if request.GET.sort == 'name' %}-name{% else %}name{% endif %}"
+                            class="sort-link">
+                            Nombre del Agente
+                            <span
+                                class="sort-arrow {% if 'name' in request.GET.sort or not request.GET.sort and current_view == 'agentes' %}active{% endif %}">
+                                {% if request.GET.sort == 'name' or not request.GET.sort and current_view == 'agentes'
+                                %}▲{% elif request.GET.sort == '-name' %}▼{% else %}⇅{% endif %}
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="?view=agentes&sort={% if request.GET.sort == 'location' %}-location{% else %}location{% endif %}"
+                            class="sort-link">
+                            Ubicación / Área
+                            <span class="sort-arrow {% if 'location' in request.GET.sort %}active{% endif %}">
+                                {% if request.GET.sort == 'location' %}▲{% elif request.GET.sort == '-location' %}▼{%
+                                else %}⇅{% endif %}
+                            </span>
+                        </a>
+                    </th>
+                    {% if is_editor %}<th style="text-align: right;">Acciones</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for agent in agents %}
+                <tr class="agent-row">
+                    <td style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
+                    <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
+                    {% if is_editor %}
+                    <td style="text-align: right;">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                            <a href="{% url 'export_agent_report' agent.id %}" class="btn btn-secondary btn-sm"
+                                style="background: #dbeafe; color: #1e40af;">Reporte</a>
+                            <a href="{% url 'edit_agent' agent.id %}" class="btn btn-secondary btn-sm">Editar</a>
+                            <a href="{% url 'delete_agent' agent.id %}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar este agente y todos sus registros?')">Eliminar</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endif %}
 
 <script>
-function filterAgents() {
-    const input = document.getElementById('agentSearch');
-    const filter = input.value.toLowerCase();
-    const rows = document.getElementsByClassName('agent-row');
+    function filterAgents() {
+        const input = document.getElementById('agentSearch');
+        const filter = input.value.toLowerCase();
+        const rows = document.getElementsByClassName('agent-row');
 
-    for (let i = 0; i < rows.length; i++) {
-        const nameCell = rows[i].getElementsByClassName('agent-name')[0];
-        if (nameCell) {
-            const nameText = nameCell.textContent || nameCell.innerText;
-            if (nameText.toLowerCase().indexOf(filter) > -1) {
-                rows[i].style.display = "";
-            } else {
-                rows[i].style.display = "none";
+        for (let i = 0; i < rows.length; i++) {
+            const nameCell = rows[i].getElementsByClassName('agent-name')[0];
+            if (nameCell) {
+                const nameText = nameCell.textContent || nameCell.innerText;
+                if (nameText.toLowerCase().indexOf(filter) > -1) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
             }
         }
     }
-}
 </script>
 {% endblock %}
