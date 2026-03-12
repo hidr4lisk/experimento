@@ -309,10 +309,17 @@
 {% else %}
     <!-- VISTA AGENTES -->
     <div class="glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700;">Personal de la Gerencia</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px;">
+            <h2 style="font-size: 20px; color: #0f172a; font-weight: 700; flex-shrink: 0;">Personal de la Gerencia</h2>
+            
+            <div style="flex-grow: 1; position: relative; max-width: 400px;">
+                <input type="text" id="agentSearch" placeholder="🔍 Buscar agente por nombre..." 
+                       style="width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; outline: none; transition: border-color 0.2s;"
+                       onkeyup="filterAgents()">
+            </div>
+
             {% if is_editor %}
-            <a href="{% url 'add_agent' %}" class="btn btn-primary">
+            <a href="{% url 'add_agent' %}" class="btn btn-primary" style="flex-shrink: 0;">
                 <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
             </a>
             {% endif %}
@@ -343,8 +350,8 @@
                 </thead>
                 <tbody>
                     {% for agent in agents %}
-                    <tr>
-                        <td style="font-weight: 600;">{{ agent.name }}</td>
+                    <tr class="agent-row">
+                        <td style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
                         <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
                         {% if is_editor %}
                         <td style="text-align: right;">
@@ -362,4 +369,24 @@
         </div>
     </div>
 {% endif %}
+
+<script>
+function filterAgents() {
+    const input = document.getElementById('agentSearch');
+    const filter = input.value.toLowerCase();
+    const rows = document.getElementsByClassName('agent-row');
+
+    for (let i = 0; i < rows.length; i++) {
+        const nameCell = rows[i].getElementsByClassName('agent-name')[0];
+        if (nameCell) {
+            const nameText = nameCell.textContent || nameCell.innerText;
+            if (nameText.toLowerCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+}
+</script>
 {% endblock %}
