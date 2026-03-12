@@ -31,7 +31,7 @@ def export_agent_report(request, agent_id):
     thin_border = Border(left=thin_side, right=thin_side, top=thin_side, bottom=thin_side)
     
     # Encabezados
-    headers = ['Tipo de Licencia', 'Fecha Inicio', 'Fecha Fin', 'Notas']
+    headers = ['Agente', 'Tipo de Licencia', 'Fecha Inicio', 'Fecha Fin', 'Notas']
     for col_num, header_title in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col_num, value=header_title)
         cell.font = header_font
@@ -42,40 +42,18 @@ def export_agent_report(request, agent_id):
     # Datos
     for row_num, record in enumerate(records, 2):
         cells = [
-            ws.cell(row=row_num, column=1, value=record.get_record_type_display()),
-            ws.cell(row=row_num, column=2, value=record.fecha_inicio.strftime('%d/%m/%Y')),
-            ws.cell(row=row_num, column=3, value=record.fecha_fin.strftime('%d/%m/%Y')),
-            ws.cell(row=row_num, column=4, value=record.notes or "-")
+            ws.cell(row=row_num, column=1, value=agent.name),
+            ws.cell(row=row_num, column=2, value=record.get_record_type_display()),
+            ws.cell(row=row_num, column=3, value=record.fecha_inicio.strftime('%d/%m/%Y')),
+            ws.cell(row=row_num, column=4, value=record.fecha_fin.strftime('%d/%m/%Y')),
+            ws.cell(row=row_num, column=5, value=record.notes or "-")
         ]
         for cell in cells:
             cell.alignment = center_align
             cell.border = thin_border
     
-    # Branding / Footer - A partir de columna F, fila 2
-    now_str = date.today().strftime('%d/%m/%Y')
-    branding_lines = [
-        f"Reporte generado por SIA, {now_str}",
-        "Gerencia Ejecutiva de Planeamiento y Concesiones",
-        "Diseñado, Producido y Gestionado por Federico Furgiuele",
-        "Aplicación de control interno - Todos los derechos reservados."
-    ]
-    
-    branding_start_col = 6 # Columna F
-    branding_end_col = 10  # Columna J
-    
-    for i, text in enumerate(branding_lines):
-        row = i + 2
-        ws.merge_cells(start_row=row, start_column=branding_start_col, end_row=row, end_column=branding_end_col)
-        cell = ws.cell(row=row, column=branding_start_col, value=text)
-        
-        # Estilo base para branding
-        font_color = "64748B" if i == 3 else "1E293B"
-        is_bold = i < 3
-        cell.font = Font(size=9, bold=is_bold, color=font_color)
-        cell.alignment = Alignment(horizontal="center", vertical="center")
-
     # Ajustar ancho de columnas (Tabla principal)
-    for i in range(1, 5):
+    for i in range(1, 6):
         max_length = 0
         column = get_column_letter(i)
         for cell in ws[column]:
@@ -84,13 +62,9 @@ def export_agent_report(request, agent_id):
                     max_length = len(str(cell.value))
             except: pass
         ws.column_dimensions[column].width = max_length + 5
-    
-    # Ajustar ancho de columnas de branding (F a J) para que se vea bien
-    for i in range(branding_start_col, branding_end_col + 1):
-        ws.column_dimensions[get_column_letter(i)].width = 15
 
     # Preparar respuesta
-    filename = f"Reporte_Asistencia_{agent.name.replace(' ', '_')}.xlsx"
+    filename = "Reporte SIA.xlsx"
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
