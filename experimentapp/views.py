@@ -233,6 +233,9 @@ def home(request):
     agents = Agent.objects.all().order_by('name')
     if current_view == 'agentes':
         agents = agents.order_by(sort_by)
+        # Adjuntar estado de disponibilidad para cada agente en la lista
+        for agent in agents:
+            agent.status = calculate_agent_status(agent)
     
     is_admin = request.user.is_superuser
     is_editor = request.user.is_superuser or request.user.is_staff

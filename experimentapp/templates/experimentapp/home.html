@@ -85,6 +85,17 @@ text-transform: uppercase;
 .type-badge.type-razon_particular { background: #ffedd5 !important; color: #9a3412 !important; }
 .type-badge.type-otro { background: #f1f5f9 !important; color: #475569 !important; }
 
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+.status-available { background: #dcfce7; color: #166534; }
+.status-away { background: #ffedd5; color: #9a3412; }
+
 .btn-sm {
 padding: 6px 12px;
 font-size: 12px;
@@ -291,6 +302,7 @@ opacity: 1;
         <table>
             <thead>
                 <tr>
+                    <th style="width: 50px; text-align: center;"></th>
                     <th>Agente</th>
                     <th>Ubicación / Área</th>
                     <th>Fecha de Reincorporación</th>
@@ -299,6 +311,9 @@ opacity: 1;
             <tbody>
                 {% for item in licensing_agents %}
                 <tr>
+                    <td style="text-align: center;">
+                        <a href="{% url 'agent_calendar' item.agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
+                    </td>
                     <td style="font-weight: 600;">{{ item.agent.name }}</td>
                     <td><span style="color: var(--text-muted);">{{ item.agent.location|default:"-" }}</span></td>
                     <td>
@@ -366,6 +381,7 @@ opacity: 1;
                             </span>
                         </a>
                     </th>
+                    <th>Disponibilidad</th>
                     {% if is_editor %}<th style="text-align: right;">Acciones</th>{% endif %}
                 </tr>
             </thead>
@@ -377,6 +393,13 @@ opacity: 1;
                     </td>
                     <td style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
                     <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
+                    <td>
+                        {% if agent.status.available %}
+                            <span class="status-badge status-available">DISPONIBLE</span>
+                        {% else %}
+                            <span class="status-badge status-away">REINTEGRA: {{ agent.status.return_date|date:"d/m" }}</span>
+                        {% endif %}
+                    </td>
                     {% if is_editor %}
                     <td style="text-align: right;">
                         <div style="display: flex; gap: 8px; justify-content: flex-end;">
