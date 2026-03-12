@@ -198,7 +198,7 @@ opacity: 1;
         <table>
             <thead>
                 <tr>
-                    <th style="width: 60px; text-align: center;">Cal.</th>
+                    <th style="width: 60px; text-align: center;"></th>
                     <th>
                         <a href="?view=asistencia&sort={% if request.GET.sort == 'agent__name' %}-agent__name{% else %}agent__name{% endif %}"
                             class="sort-link">
@@ -331,9 +331,14 @@ opacity: 1;
         </div>
 
         {% if is_editor %}
-        <a href="{% url 'add_agent' %}" class="btn btn-primary" style="flex-shrink: 0;">
-            <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
-        </a>
+        <div style="display: flex; gap: 10px; flex-shrink: 0;">
+            <a href="{% url 'export_full_report' %}" class="btn btn-secondary" style="background: #dbeafe; color: #1e40af;">
+                📊 Reporte Completo
+            </a>
+            <a href="{% url 'add_agent' %}" class="btn btn-primary">
+                <span style="font-size: 18px; margin-right: 8px;">+</span> Agregar Agente
+            </a>
+        </div>
         {% endif %}
     </div>
 
@@ -341,6 +346,7 @@ opacity: 1;
         <table>
             <thead>
                 <tr>
+                    <th style="width: 50px; text-align: center;"></th>
                     <th>
                         <a href="?view=agentes&sort={% if request.GET.sort == 'name' %}-name{% else %}name{% endif %}"
                             class="sort-link">
@@ -366,6 +372,9 @@ opacity: 1;
             <tbody>
                 {% for agent in agents %}
                 <tr class="agent-row">
+                    <td style="text-align: center;">
+                        <a href="{% url 'agent_calendar' agent.id %}" class="btn-calendar" title="Ver Calendario">📅</a>
+                    </td>
                     <td style="font-weight: 600;" class="agent-name">{{ agent.name }}</td>
                     <td><span style="color: var(--text-muted);">{{ agent.location|default:"-" }}</span></td>
                     {% if is_editor %}

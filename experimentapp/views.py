@@ -72,6 +72,68 @@ def export_agent_report(request, agent_id):
     wb.save(response)
     return response
 
+@login_required(login_url='login')
+def export_full_report(request):
+    if not (request.user.is_superuser or request.user.is_staff):
+        return HttpResponse("No autorizado", status=403)
+        
+    records = Record.objects.all().order_by('agent__name', 'fecha_inicio')
+    
+    # Crear libro de Excel
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Reporte Completo"
+    
+    # Estilos
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill(start_color="2563EB", end_color="2563EB", fill_type="solid")
+    center_align = Alignment(horizontal="center", vertical="center")
+    
+    thin_side = Side(style='thin', color="000000")
+    thin_border = Border(left=thin_side, right=thin_side, top=thin_side, bottom=thin_side)
+    
+    # Encabezados
+    headers = ['Agente', 'Tipo de Licencia', 'Fecha Inicio', 'Fecha Fin', 'Notas']
+    for col_num, header_title in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num, value=header_title)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+        cell.border = thin_border
+    
+    # Datos
+    for row_num, record in enumerate(records, 2):
+        cells = [
+            ws.cell(row=row_num, column=1, value=record.agent.name),
+            ws.cell(row=row_num, column=2, value=record.get_record_type_display()),
+            ws.cell(row=row_num, column=3, value=record.fecha_inicio.strftime('%d/%m/%Y')),
+            ws.cell(row=row_num, column=4, value=record.fecha_fin.strftime('%d/%m/%Y')),
+            ws.cell(row=row_num, column=5, value=record.notes or "-")
+        ]
+        for cell in cells:
+            cell.alignment = center_align
+            cell.border = thin_border
+    
+    # Ajustar ancho de columnas
+    for i in range(1, 6):
+        max_length = 0
+        column = get_column_letter(i)
+        for cell in ws[column]:
+            try:
+                if cell.value and len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except: pass
+        ws.column_dimensions[column].width = max_length + 5
+
+    # Preparar respuesta
+    filename = "Reporte SIA.xlsx"
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    wb.save(response)
+    return response
+
 def calculate_agent_status(agent):
     """
     Calcula el estado de disponibilidad de un agente.
