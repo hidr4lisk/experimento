@@ -257,16 +257,13 @@
 
             {% if user.is_authenticated %}
             <div class="user-info">
-                <span class="user-badge">
-                    {{ user.username|upper }}
-                </span>
-                <div style="display: flex; gap: 15px; align-items: center; margin-left: 10px;">
-                    <a href="{% url 'home' %}" style="color: white; text-decoration: none; font-size: 13px; font-weight: 500;">Asistencia</a>
-                    {% if user.is_superuser %}
-                    <a href="{% url 'manage_users' %}" style="color: white; text-decoration: none; font-size: 13px; font-weight: 500;">Usuarios</a>
-                    {% endif %}
+                {% if user.is_superuser %}
+                <div style="display: flex; gap: 8px; align-items: center; margin-left: 10px;">
+                    <a href="{% url 'home' %}" style="background: rgba(255,255,255,0.1); color: white; text-decoration: none; font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 20px; text-transform: uppercase;">Asistencia</a>
+                    <a href="{% url 'manage_users' %}" style="background: rgba(255,255,255,0.1); color: white; text-decoration: none; font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 20px; text-transform: uppercase;">Usuarios</a>
                 </div>
-                <a href="{% url 'logout' %}" class="logout-link" style="margin-left: 10px;">Cerrar Sesión</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="logout-link" style="margin-left: 15px; font-size: 12px; font-weight: 500;">Cerrar Sesión</a>
             </div>
             {% endif %}
         </div>
