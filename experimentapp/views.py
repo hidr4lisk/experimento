@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, date
 import holidays
 from django.core.management import call_command
 import openpyxl
-from openpyxl.styles import Font, Alignment, PatternFill
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
 @login_required(login_url='login')
@@ -25,7 +25,10 @@ def export_agent_report(request, agent_id):
     # Estilos
     header_font = Font(bold=True, color="FFFFFF")
     header_fill = PatternFill(start_color="2563EB", end_color="2563EB", fill_type="solid")
-    center_align = Alignment(horizontal="center")
+    center_align = Alignment(horizontal="center", vertical="center")
+    
+    thin_side = Side(style='thin', color="000000")
+    thin_border = Border(left=thin_side, right=thin_side, top=thin_side, bottom=thin_side)
     
     # Encabezados
     headers = ['Tipo de Licencia', 'Fecha Inicio', 'Fecha Fin', 'Notas']
@@ -34,24 +37,57 @@ def export_agent_report(request, agent_id):
         cell.font = header_font
         cell.fill = header_fill
         cell.alignment = center_align
+        cell.border = thin_border
     
     # Datos
     for row_num, record in enumerate(records, 2):
-        ws.cell(row=row_num, column=1, value=record.get_record_type_display())
-        ws.cell(row=row_num, column=2, value=record.fecha_inicio.strftime('%d/%m/%Y'))
-        ws.cell(row=row_num, column=3, value=record.fecha_fin.strftime('%d/%m/%Y'))
-        ws.cell(row=row_num, column=4, value=record.notes or "-")
+        cells = [
+            ws.cell(row=row_num, column=1, value=record.get_record_type_display()),
+            ws.cell(row=row_num, column=2, value=record.fecha_inicio.strftime('%d/%m/%Y')),
+            ws.cell(row=row_num, column=3, value=record.fecha_fin.strftime('%d/%m/%Y')),
+            ws.cell(row=row_num, column=4, value=record.notes or "-")
+        ]
+        for cell in cells:
+            cell.alignment = center_align
+            cell.border = thin_border
     
-    # Ajustar ancho de columnas
-    for i, col in enumerate(ws.columns, 1):
+    # Branding / Footer - A partir de columna F, fila 2
+    now_str = date.today().strftime('%d/%m/%Y')
+    branding_lines = [
+        f"Reporte generado por SIA, {now_str}",
+        "Gerencia Ejecutiva de Planeamiento y Concesiones",
+        "Diseñado, Producido y Gestionado por Federico Furgiuele",
+        "Aplicación de control interno - Todos los derechos reservados."
+    ]
+    
+    branding_start_col = 6 # Columna F
+    branding_end_col = 10  # Columna J
+    
+    for i, text in enumerate(branding_lines):
+        row = i + 2
+        ws.merge_cells(start_row=row, start_column=branding_start_col, end_row=row, end_column=branding_end_col)
+        cell = ws.cell(row=row, column=branding_start_col, value=text)
+        
+        # Estilo base para branding
+        font_color = "64748B" if i == 3 else "1E293B"
+        is_bold = i < 3
+        cell.font = Font(size=9, bold=is_bold, color=font_color)
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+
+    # Ajustar ancho de columnas (Tabla principal)
+    for i in range(1, 5):
         max_length = 0
         column = get_column_letter(i)
-        for cell in col:
+        for cell in ws[column]:
             try:
-                if len(str(cell.value)) > max_length:
+                if cell.value and len(str(cell.value)) > max_length:
                     max_length = len(str(cell.value))
             except: pass
         ws.column_dimensions[column].width = max_length + 5
+    
+    # Ajustar ancho de columnas de branding (F a J) para que se vea bien
+    for i in range(branding_start_col, branding_end_col + 1):
+        ws.column_dimensions[get_column_letter(i)].width = 15
 
     # Preparar respuesta
     filename = f"Reporte_Asistencia_{agent.name.replace(' ', '_')}.xlsx"
