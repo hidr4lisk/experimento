@@ -151,8 +151,8 @@
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Agente</label>
                     <select name="agent" onchange="this.form.submit()">
-                        <option value="" {% if not request.GET.agent %}selected{% endif %} disabled>Seleccione un Agente</option>
-                        <option value="">Todos los Agentes</option>
+                        <option value="" {% if 'agent' not in request.GET %}selected{% endif %} disabled>Seleccione un Agente</option>
+                        <option value="all" {% if request.GET.agent == 'all' %}selected{% endif %}>Todos los Agentes</option>
                         {% for agent in agents %}
                         <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>
                             {{ agent.name }}
@@ -349,6 +349,7 @@
                         {% if is_editor %}
                         <td style="text-align: right;">
                             <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                <a href="{% url 'export_agent_report' agent.id %}" class="btn btn-secondary btn-sm" style="background: #dbeafe; color: #1e40af;">Reporte</a>
                                 <a href="{% url 'edit_agent' agent.id %}" class="btn btn-secondary btn-sm">Editar</a>
                                 <a href="{% url 'delete_agent' agent.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este agente y todos sus registros?')">Eliminar</a>
                             </div>

@@ -8,6 +8,59 @@ from .models import Agent, Record
 from datetime import datetime, timedelta, date
 import holidays
 from django.core.management import call_command
+import openpyxl
+from openpyxl.styles import Font, Alignment, PatternFill
+from openpyxl.utils import get_column_letter
+
+@login_required(login_url='login')
+def export_agent_report(request, agent_id):
+    agent = get_object_or_404(Agent, id=agent_id)
+    records = Record.objects.filter(agent=agent).order_by('fecha_inicio')
+    
+    # Crear libro de Excel
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"Reporte {agent.name[:20]}"
+    
+    # Estilos
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill(start_color="2563EB", end_color="2563EB", fill_type="solid")
+    center_align = Alignment(horizontal="center")
+    
+    # Encabezados
+    headers = ['Tipo de Licencia', 'Fecha Inicio', 'Fecha Fin', 'Notas']
+    for col_num, header_title in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num, value=header_title)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+    
+    # Datos
+    for row_num, record in enumerate(records, 2):
+        ws.cell(row=row_num, column=1, value=record.get_record_type_display())
+        ws.cell(row=row_num, column=2, value=record.fecha_inicio.strftime('%d/%m/%Y'))
+        ws.cell(row=row_num, column=3, value=record.fecha_fin.strftime('%d/%m/%Y'))
+        ws.cell(row=row_num, column=4, value=record.notes or "-")
+    
+    # Ajustar ancho de columnas
+    for i, col in enumerate(ws.columns, 1):
+        max_length = 0
+        column = get_column_letter(i)
+        for cell in col:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except: pass
+        ws.column_dimensions[column].width = max_length + 5
+
+    # Preparar respuesta
+    filename = f"Reporte_Asistencia_{agent.name.replace(' ', '_')}.xlsx"
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    wb.save(response)
+    return response
 
 def calculate_agent_status(agent):
     """
@@ -64,8 +117,9 @@ def home(request):
     search_query = request.GET.get('search')
     show_duplicates = request.GET.get('duplicates') == 'true'
     
-    if agent_filter:
+    if agent_filter and agent_filter != 'all':
         records = records.filter(agent_id=agent_filter)
+    
     if record_type_filter:
         records = records.filter(record_type=record_type_filter)
     if search_query:
@@ -91,8 +145,13 @@ def home(request):
     # Ordenamiento
     sort_by = request.GET.get('sort', 'name' if current_view == 'agentes' else '-fecha_inicio')
     
-    # Check if any filter is applied
-    has_filter = any([agent_filter, record_type_filter, search_query, show_duplicates])
+    # Check if any filter is applied (including the 'all' selection for agents)
+    has_filter = any([
+        agent_filter is not None, 
+        record_type_filter, 
+        search_query, 
+        show_duplicates
+    ])
     
     if current_view == 'asistencia' and not has_filter:
         records = Record.objects.none()

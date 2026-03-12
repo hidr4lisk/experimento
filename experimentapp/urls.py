@@ -22,4 +22,5 @@ urlpatterns = [
     path('edit-user/<int:user_id>/', views.edit_user_role, name='edit_user'),
     path('change-password/<int:user_id>/', views.change_password, name='change_password'),
     path('delete-user/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('export-report/<int:agent_id>/', views.export_agent_report, name='export_agent_report'),
 ]
