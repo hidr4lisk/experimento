@@ -205,7 +205,8 @@ def home(request):
         overlapping = Record.objects.filter(
             agent=OuterRef('agent'),
             fecha_inicio__lte=OuterRef('fecha_fin'),
-            fecha_fin__gte=OuterRef('fecha_inicio')
+            fecha_fin__gte=OuterRef('fecha_inicio'),
+            record_type=OuterRef('record_type')
         ).exclude(id=OuterRef('id'))
         
         records = records.annotate(
